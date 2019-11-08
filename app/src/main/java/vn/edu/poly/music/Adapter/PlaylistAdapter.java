@@ -1,6 +1,8 @@
 package vn.edu.poly.music.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +16,12 @@ import java.util.List;
 
 import vn.edu.poly.music.Model.ThuMuc;
 import vn.edu.poly.music.R;
+import vn.edu.poly.music.SQLite.ThuMucDAO;
 
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PlaylistHolder> {
     private Context context;
     private List<ThuMuc> thuMucList;
+    private ThuMucDAO thuMucDAO;
 
     public PlaylistAdapter(Context context, List<ThuMuc> thuMucList) {
         this.context = context;
@@ -32,9 +36,32 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PlaylistHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PlaylistHolder holder, final int position) {
 
+        thuMucDAO = new ThuMucDAO(context);
         holder.tvtenThuMuc.setText(thuMucList.get(position).getTenThuMuc());
+        holder.imgDelete_ThuMuc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("Bạn có chắc chắn muốn xóa bài hát này");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        thuMucDAO.delete(thuMucList.get(position).getTenThuMuc());
+                        thuMucList.remove(position);
+                        notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.create().show();
+            }
+        });
     }
 
     @Override
