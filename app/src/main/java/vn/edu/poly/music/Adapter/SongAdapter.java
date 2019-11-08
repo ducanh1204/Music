@@ -44,7 +44,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("Bạn có chắc chắn muốn xóa bài hát này");
+                builder.setMessage("Bạn có chắc chắn muốn xóa bài hát này không?");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

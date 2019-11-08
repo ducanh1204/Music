@@ -83,6 +83,38 @@ public class SongDAO {
 
         return singerList;
     }
+    public List<Song> getAll_Singer_Song(String tencasi) {
+        List<Song> songList = new ArrayList<>();
+
+        SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getReadableDatabase();
+
+        String SQL = "SELECT * FROM " + USER_TABLE + " WHERE tenCaSi =?";
+
+        Cursor cursor = sqLiteDatabase.rawQuery(SQL, new String[]{tencasi});
+
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+
+                    Song song = new Song();
+
+                    song.setTenBaiHat(cursor.getString(cursor.getColumnIndex(tenBaiHat)));
+                    song.setTenCaSi(cursor.getString(cursor.getColumnIndex(tenCaSi)));
+                    song.setFileMp3(Integer.parseInt(cursor.getString(cursor.getColumnIndex(fileMp3))));
+
+                    songList.add(song);
+                    cursor.moveToNext();
+
+                }
+                cursor.close();
+            }
+        }
+
+        return songList;
+    }
+
 
     public long insert(Song song) {
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();

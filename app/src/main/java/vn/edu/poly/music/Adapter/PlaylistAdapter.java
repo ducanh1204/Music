@@ -14,42 +14,42 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import vn.edu.poly.music.Model.ThuMuc;
+import vn.edu.poly.music.Model.Playlist;
 import vn.edu.poly.music.R;
-import vn.edu.poly.music.SQLite.ThuMucDAO;
+import vn.edu.poly.music.SQLite.PlaylistDAO;
 
-public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PlaylistHolder> {
+public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PLaylistHolder> {
     private Context context;
-    private List<ThuMuc> thuMucList;
-    private ThuMucDAO thuMucDAO;
+    private List<Playlist> playlistList;
+    private PlaylistDAO playlistDAO;
 
-    public PlaylistAdapter(Context context, List<ThuMuc> thuMucList) {
+    public PlaylistAdapter(Context context, List<Playlist> playlistList) {
         this.context = context;
-        this.thuMucList = thuMucList;
+        this.playlistList = playlistList;
     }
 
     @NonNull
     @Override
-    public PlaylistHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PLaylistHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_playlist,parent,false);
-        return new PlaylistHolder(view);
+        return new PLaylistHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PlaylistHolder holder, final int position) {
-
-        thuMucDAO = new ThuMucDAO(context);
-        holder.tvtenThuMuc.setText(thuMucList.get(position).getTenThuMuc());
-        holder.imgDelete_ThuMuc.setOnClickListener(new View.OnClickListener() {
+    public void onBindViewHolder(@NonNull PLaylistHolder holder, final int position) {
+        playlistDAO = new PlaylistDAO(context);
+        holder.tvtenBaiHat.setText(playlistList.get(position).getTenBaiHat());
+        holder.tvtenCaSi.setText(playlistList.get(position).getTenCaSi());
+        holder.imgDelete_Song.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("Bạn có chắc chắn muốn xóa bài hát này");
+                builder.setMessage("Bạn có chắc chắn muốn xóa bài hát khỏi danh sách phát này không?");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        thuMucDAO.delete(thuMucList.get(position).getTenThuMuc());
-                        thuMucList.remove(position);
+                        playlistDAO.delete(playlistList.get(position).getTenBaiHat());
+                        playlistList.remove(position);
                         notifyDataSetChanged();
                     }
                 });
@@ -66,16 +66,17 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
 
     @Override
     public int getItemCount() {
-        return thuMucList.size();
+        return playlistList.size();
     }
 
-    public class PlaylistHolder extends RecyclerView.ViewHolder {
-        private TextView tvtenThuMuc;
-        private ImageView imgDelete_ThuMuc;
-        public PlaylistHolder(@NonNull View itemView) {
+    public class PLaylistHolder extends RecyclerView.ViewHolder {
+        private TextView tvtenBaiHat,tvtenCaSi;
+        private ImageView imgDelete_Song;
+        public PLaylistHolder(@NonNull View itemView) {
             super(itemView);
-            tvtenThuMuc = itemView.findViewById(R.id.tvtenThuMuc);
-            imgDelete_ThuMuc = itemView.findViewById(R.id.imgDelete_ThuMuc);
+            tvtenBaiHat = itemView.findViewById(R.id.tvtenBaiHat);
+            tvtenCaSi = itemView.findViewById(R.id.tvtenCaSi);
+            imgDelete_Song = itemView.findViewById(R.id.imgDelete_Song);
         }
     }
 }

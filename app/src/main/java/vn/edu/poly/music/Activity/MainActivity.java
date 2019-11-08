@@ -12,7 +12,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import vn.edu.poly.music.Fragment.PlayList_Fragment;
+import vn.edu.poly.music.Fragment.ThuMuc_Fragment;
 import vn.edu.poly.music.R;
 import vn.edu.poly.music.Fragment.Singer_Fragment;
 import vn.edu.poly.music.Fragment.Song_Fragment;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                         loadFragment(fragment);
                         return true;
                     case R.id.item_playlist:
-                        fragment = new PlayList_Fragment();
+                        fragment = new ThuMuc_Fragment();
                         loadFragment(fragment);
                         return true;
                     case R.id.item_singer:
