@@ -1,0 +1,67 @@
+package vn.edu.poly.music.Adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+import vn.edu.poly.music.Model.Song;
+import vn.edu.poly.music.R;
+import vn.edu.poly.music.SQLite.SongDAO;
+
+public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
+    private Context context;
+    private List<Song> songList;
+
+    public SongAdapter(Context context, List<Song> songList) {
+        this.context = context;
+        this.songList = songList;
+    }
+    private SongDAO songDAO;
+
+    @NonNull
+    @Override
+    public SongHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_song, parent, false);
+        return new SongHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull SongHolder holder, final int position) {
+        songDAO = new SongDAO(context);
+        holder.tvtenBaiHat.setText(songList.get(position).getTenBaiHat());
+        holder.tvtenCaSi.setText(songList.get(position).getTenCaSi());
+        holder.imgDelete_Song.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                songDAO.deleteUser(songList.get(position).getTenBaiHat());
+                songList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return songList.size();
+    }
+
+    public class SongHolder extends RecyclerView.ViewHolder {
+        private TextView tvtenBaiHat,tvtenCaSi;
+        private ImageView imgAdd_playlist,imgDelete_Song;
+        public SongHolder(@NonNull View itemView) {
+            super(itemView);
+            tvtenBaiHat = itemView.findViewById(R.id.tvtenBaiHat);
+            tvtenCaSi = itemView.findViewById(R.id.tvtenCaSi);
+            imgAdd_playlist = itemView.findViewById(R.id.imgAdd_playlist);
+            imgDelete_Song = itemView.findViewById(R.id.imgDelete_Song);
+        }
+    }
+}

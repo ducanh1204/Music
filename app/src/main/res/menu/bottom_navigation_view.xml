@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item_song"
+        android:icon="@drawable/music_icon"
+        android:title="@string/title_Song" />
+    <item
+        android:id="@+id/item_playlist"
+        android:icon="@drawable/playlist_icon"
+        android:title="@string/title_Playlist" />
+    <item
+        android:id="@+id/item_singer"
+        android:icon="@drawable/casi_icon"
+        android:title="@string/title_Singer" />
+</menu>
