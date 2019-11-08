@@ -1,8 +1,6 @@
 package vn.edu.poly.music.Model;
 
 public class Playlist {
-    public Playlist() {
-    }
     private String tenBaiHat,tenCaSi;
     private int fileMp3;
     private String tenThuMuc;

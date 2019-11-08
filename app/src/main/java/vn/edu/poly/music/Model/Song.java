@@ -2,16 +2,9 @@ package vn.edu.poly.music.Model;
 
 public class Song {
 
-    public Song() {
-    }
     private String tenBaiHat,tenCaSi;
     private int fileMp3;
 
-    public Song(String tenBaiHat, String tenCaSi, int fileMp3) {
-        this.tenBaiHat = tenBaiHat;
-        this.tenCaSi = tenCaSi;
-        this.fileMp3 = fileMp3;
-    }
 
     public String getTenBaiHat() {
         return tenBaiHat;

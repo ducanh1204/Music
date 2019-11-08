@@ -41,7 +41,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         holder.imgDelete_Song.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                songDAO.deleteUser(songList.get(position).getTenBaiHat());
+                songDAO.delete(songList.get(position).getTenBaiHat());
                 songList.remove(position);
                 notifyDataSetChanged();
             }

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import vn.edu.poly.music.Model.Singer;
 import vn.edu.poly.music.Model.Song;
 
 public class SongDAO {
@@ -55,7 +56,35 @@ public class SongDAO {
         return songList;
     }
 
-    public long insertSong(Song song) {
+
+    public List<Singer> getAllSinger() {
+        List<Singer> singerList = new ArrayList<>();
+
+        SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getReadableDatabase();
+
+        String SQL = "SELECT tenCaSi FROM " + USER_TABLE + " GROUP BY " + tenCaSi;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(SQL, null);
+
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+
+                    Singer singer = new Singer();
+                    singer.setTenCaSi(cursor.getString(0));
+                    singerList.add(singer);
+                    cursor.moveToNext();
+                }
+                cursor.close();
+            }
+        }
+
+        return singerList;
+    }
+
+    public long insert(Song song) {
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -68,7 +97,7 @@ public class SongDAO {
         return result;
     }
 
-    public void deleteUser(String id) {
+    public void delete(String id) {
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
 
         sqLiteDatabase.delete(USER_TABLE, tenBaiHat + "=?", new String[]{id});

@@ -17,11 +17,13 @@ import java.util.List;
 import vn.edu.poly.music.Adapter.PlaylistAdapter;
 import vn.edu.poly.music.Model.ThuMuc;
 import vn.edu.poly.music.R;
+import vn.edu.poly.music.SQLite.ThuMucDAO;
 
 public class PlayList_Fragment extends Fragment {
     private RecyclerView rvListPlaylist;
     private List<ThuMuc> thuMucList;
     private PlaylistAdapter playlistAdapter;
+    private ThuMucDAO thuMucDAO;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,12 +34,8 @@ public class PlayList_Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.playlist_fragment,container,false);
         rvListPlaylist = view.findViewById(R.id.rvListPlaylist);
-        thuMucList = new ArrayList<>();
-        for(int i = 0;i<10;i++){
-            ThuMuc thuMuc = new ThuMuc();
-            thuMuc.setTenThuMuc("Nhac tre");
-            thuMucList.add(thuMuc);
-        }
+        thuMucDAO = new ThuMucDAO(getActivity());
+        thuMucList = thuMucDAO.getAll();
         playlistAdapter = new PlaylistAdapter(getActivity(),thuMucList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvListPlaylist.setLayoutManager(linearLayoutManager);
