@@ -3,15 +3,21 @@ package vn.edu.poly.music.Adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import vn.edu.poly.music.Model.Song;
@@ -26,7 +32,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         this.context = context;
         this.songList = songList;
     }
+
     private SongDAO songDAO;
+    private MediaPlayer mediaPlayer;
 
     @NonNull
     @Override
@@ -62,6 +70,29 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
                 builder.create().show();
             }
         });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                String u = "https://zingmp3.vn/bai-hat/Sai-Lam-Cua-Anh-Dinh-Dung/ZWAFWIOZ.html";
+//                MediaPlayer mediaPlayer = new MediaPlayer();
+//                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                try {
+//                    mediaPlayer.setDataSource(u);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                try {
+//                    mediaPlayer.prepare(); // might take long! (for buffering, etc)
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                mediaPlayer.start();
+//
+//                mediaPlayer = MediaPlayer.create(context, a);
+//                mediaPlayer.start();
+//                Toast.makeText(context,songList.get(position).getFileMp3()+"",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -70,8 +101,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     }
 
     public class SongHolder extends RecyclerView.ViewHolder {
-        private TextView tvtenBaiHat,tvtenCaSi;
-        private ImageView imgAdd_playlist,imgDelete_Song;
+        private TextView tvtenBaiHat, tvtenCaSi;
+        private ImageView imgAdd_playlist, imgDelete_Song;
+
         public SongHolder(@NonNull View itemView) {
             super(itemView);
             tvtenBaiHat = itemView.findViewById(R.id.tvtenBaiHat);
