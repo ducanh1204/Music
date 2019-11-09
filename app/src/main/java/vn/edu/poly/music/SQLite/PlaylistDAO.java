@@ -43,7 +43,7 @@ public class PlaylistDAO {
 
                     playlist.setTenBaiHat(cursor.getString(cursor.getColumnIndex(tenBaiHat)));
                     playlist.setTenCaSi(cursor.getString(cursor.getColumnIndex(tenCaSi)));
-                    playlist.setFileMp3(Integer.parseInt(cursor.getString(cursor.getColumnIndex(fileMp3))));
+                    playlist.setFileMp3(cursor.getString(cursor.getColumnIndex(fileMp3)));
                     playlist.setTenThuMuc(cursor.getString(cursor.getColumnIndex(tenThuMuc)));
 
                     playlistList.add(playlist);

@@ -11,13 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import vn.edu.poly.music.Model.Song;
@@ -70,29 +68,33 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
                 builder.create().show();
             }
         });
+        holder.imgAdd_playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
+            }
+        });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String u = "https://zingmp3.vn/bai-hat/Sai-Lam-Cua-Anh-Dinh-Dung/ZWAFWIOZ.html";
-//                MediaPlayer mediaPlayer = new MediaPlayer();
-//                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//                try {
-//                    mediaPlayer.setDataSource(u);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                try {
-//                    mediaPlayer.prepare(); // might take long! (for buffering, etc)
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                mediaPlayer.start();
-//
-//                mediaPlayer = MediaPlayer.create(context, a);
-//                mediaPlayer.start();
-//                Toast.makeText(context,songList.get(position).getFileMp3()+"",Toast.LENGTH_SHORT).show();
+                start(position);
             }
         });
+    }
+
+    private void start(int position) {
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        Uri uri = Uri.parse(songList.get(position).getFileMp3());
+        try {
+            mediaPlayer.setDataSource(context, uri);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

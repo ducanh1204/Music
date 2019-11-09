@@ -2,7 +2,7 @@ package vn.edu.poly.music.Model;
 
 public class Playlist {
     private String tenBaiHat,tenCaSi;
-    private int fileMp3;
+    private String fileMp3;
     private String tenThuMuc;
 
     public String getTenBaiHat() {
@@ -21,11 +21,11 @@ public class Playlist {
         this.tenCaSi = tenCaSi;
     }
 
-    public int getFileMp3() {
+    public String getFileMp3() {
         return fileMp3;
     }
 
-    public void setFileMp3(int fileMp3) {
+    public void setFileMp3(String fileMp3) {
         this.fileMp3 = fileMp3;
     }
 

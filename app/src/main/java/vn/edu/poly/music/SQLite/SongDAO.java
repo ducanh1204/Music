@@ -43,7 +43,7 @@ public class SongDAO {
 
                     song.setTenBaiHat(cursor.getString(cursor.getColumnIndex(tenBaiHat)));
                     song.setTenCaSi(cursor.getString(cursor.getColumnIndex(tenCaSi)));
-                    song.setFileMp3(Integer.parseInt(cursor.getString(cursor.getColumnIndex(fileMp3))));
+                    song.setFileMp3(cursor.getString(cursor.getColumnIndex(fileMp3)));
 
                     songList.add(song);
                     cursor.moveToNext();
@@ -102,7 +102,7 @@ public class SongDAO {
 
                     song.setTenBaiHat(cursor.getString(cursor.getColumnIndex(tenBaiHat)));
                     song.setTenCaSi(cursor.getString(cursor.getColumnIndex(tenCaSi)));
-                    song.setFileMp3(Integer.parseInt(cursor.getString(cursor.getColumnIndex(fileMp3))));
+                    song.setFileMp3(cursor.getString(cursor.getColumnIndex(fileMp3)));
 
                     songList.add(song);
                     cursor.moveToNext();
