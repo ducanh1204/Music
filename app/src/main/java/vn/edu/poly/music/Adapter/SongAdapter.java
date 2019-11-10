@@ -285,11 +285,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     }
 
     private void createAlertDialag(final int position) {
+        final PlaylistDAO playlistDAO = new PlaylistDAO(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage("Bạn có chắc chắn muốn xóa bài hát này không?");
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                playlistDAO.delete_song(songList.get(position).getTenBaiHat()+"");
                 songDAO.delete(songList.get(position).getTenBaiHat());
                 songList.remove(position);
                 notifyDataSetChanged();

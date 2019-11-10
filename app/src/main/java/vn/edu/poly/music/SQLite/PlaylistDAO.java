@@ -29,7 +29,7 @@ public class PlaylistDAO {
 
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getReadableDatabase();
 
-        String SQL = "SELECT * FROM " + USER_TABLE + " WHERE tenthumuc =? "  ;
+        String SQL = "SELECT * FROM " + USER_TABLE + " WHERE tenthumuc =? ";
 
         Cursor cursor = sqLiteDatabase.rawQuery(SQL, new String[]{tenthumuc});
 
@@ -72,10 +72,16 @@ public class PlaylistDAO {
         return result;
     }
 
-    public void delete(String id) {
+    public void delete_theotm(String tentm) {
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
 
-        sqLiteDatabase.delete(USER_TABLE, tenBaiHat + "=?", new String[]{id});
+        sqLiteDatabase.delete(USER_TABLE, tenThuMuc + "=?", new String[]{tentm});
+
+    }
+    public void delete_song(String song) {
+        SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
+
+        sqLiteDatabase.delete(USER_TABLE, tenBaiHat + "=?", new String[]{song});
 
     }
 }

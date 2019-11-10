@@ -49,7 +49,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PLayli
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        playlistDAO.delete(playlistList.get(position).getTenBaiHat());
+                        playlistDAO.delete_theotm(playlistList.get(position).getTenThuMuc());
                         playlistList.remove(position);
                         notifyDataSetChanged();
                     }
@@ -66,7 +66,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PLayli
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,playlistList.get(position).getTenBaiHat()+" - " +playlistList.get(position).getTenCaSi(),Toast.LENGTH_SHORT).show();
             }
         });
     }
