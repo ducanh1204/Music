@@ -1,25 +1,30 @@
 package vn.edu.poly.music.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import vn.edu.poly.music.Activity.SingerSongActicity;
 import vn.edu.poly.music.Model.Singer;
+import vn.edu.poly.music.Model.Song;
 import vn.edu.poly.music.R;
+import vn.edu.poly.music.SQLite.SongDAO;
 
 public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHolder> {
     private Context context;
     private List<Singer> singerList;
+    private List<Song> songList;
+    private Singer_SongAdapter singer_songAdapter;
+    private SongDAO songDAO;
+    private RecyclerView rvListSinger_Song;
 
     public SingerAdapter(Context context, List<Singer> singerList) {
         this.context = context;
@@ -35,15 +40,22 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHold
 
     @Override
     public void onBindViewHolder(@NonNull SingerHolder holder, final int position) {
+        songDAO = new SongDAO(context);
         holder.tvtenCaSi.setText(singerList.get(position).getTenCaSi());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, SingerSongActicity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("tenCaSi",singerList.get(position).getTenCaSi());
-                intent.putExtra("truyenIntent2",bundle);
-                context.startActivity(intent);
+                Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.dialog_singer_song_acticity);
+                dialog.show();
+                dialog.setTitle("Bài hát của ca sĩ " + singerList.get(position).getTenCaSi());
+                rvListSinger_Song = dialog.findViewById(R.id.rvListSinger_Song);
+                songList = songDAO.getAll_Singer_Song(singerList.get(position).getTenCaSi());
+                singer_songAdapter = new Singer_SongAdapter(context,songList);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                rvListSinger_Song.setLayoutManager(linearLayoutManager);
+                rvListSinger_Song.setAdapter(singer_songAdapter);
+
             }
         });
     }

@@ -1,10 +1,9 @@
 package vn.edu.poly.music.Adapter;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +11,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import vn.edu.poly.music.Activity.PlaylistActivity;
+import vn.edu.poly.music.Model.Playlist;
 import vn.edu.poly.music.Model.ThuMuc;
 import vn.edu.poly.music.R;
+import vn.edu.poly.music.SQLite.PlaylistDAO;
 import vn.edu.poly.music.SQLite.ThuMucDAO;
 
 public class ThuMucAdapter extends RecyclerView.Adapter<ThuMucAdapter.ThuMUctHolder> {
     private Context context;
     private List<ThuMuc> thuMucList;
     private ThuMucDAO thuMucDAO;
+    private PlaylistDAO playlistDAO;
+    private List<Playlist> playlistList;
+    private PlaylistAdapter playlistAdapter;
+    private RecyclerView rvListPlaylist;
+
 
     public ThuMucAdapter(Context context, List<ThuMuc> thuMucList) {
         this.context = context;
@@ -34,14 +40,15 @@ public class ThuMucAdapter extends RecyclerView.Adapter<ThuMucAdapter.ThuMUctHol
     @NonNull
     @Override
     public ThuMUctHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_thumuc,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_thumuc, parent, false);
         return new ThuMUctHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ThuMUctHolder holder, final int position) {
 
-        thuMucDAO = new ThuMucDAO(context);
+
+        playlistDAO = new PlaylistDAO(context);
         holder.tvtenThuMuc.setText(thuMucList.get(position).getTenThuMuc());
         holder.imgDelete_ThuMuc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,11 +75,17 @@ public class ThuMucAdapter extends RecyclerView.Adapter<ThuMucAdapter.ThuMUctHol
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, PlaylistActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("tenThuMuc",thuMucList.get(position).getTenThuMuc());
-                intent.putExtra("truyenIntent",bundle);
-                context.startActivity(intent);
+                Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.dialog_playlist);
+                dialog.show();
+                rvListPlaylist = dialog.findViewById(R.id.rvListPlaylist);
+                dialog.setTitle("Danh sách phát " + thuMucList.get(position).getTenThuMuc());
+                playlistList = playlistDAO.getAll(thuMucList.get(position).getTenThuMuc());
+                playlistAdapter = new PlaylistAdapter(context, playlistList);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                rvListPlaylist.setLayoutManager(linearLayoutManager);
+                rvListPlaylist.setAdapter(playlistAdapter);
+
             }
         });
     }
@@ -85,6 +98,7 @@ public class ThuMucAdapter extends RecyclerView.Adapter<ThuMucAdapter.ThuMUctHol
     public class ThuMUctHolder extends RecyclerView.ViewHolder {
         private TextView tvtenThuMuc;
         private ImageView imgDelete_ThuMuc;
+
         public ThuMUctHolder(@NonNull View itemView) {
             super(itemView);
             tvtenThuMuc = itemView.findViewById(R.id.tvtenThuMuc);

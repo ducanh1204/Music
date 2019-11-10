@@ -1,6 +1,7 @@
 package vn.edu.poly.music.Adapter;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.media.AudioManager;
@@ -34,6 +35,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         this.songList = songList;
     }
 
+
     private SongDAO songDAO;
 
 
@@ -52,12 +54,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         holder.imgPopupmenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(context,v);
-                popupMenu.getMenuInflater().inflate(R.menu.popup_menu,popupMenu.getMenu());
+                PopupMenu popupMenu = new PopupMenu(context, v);
+                popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()){
+                        switch (item.getItemId()) {
                             case R.id.itemSua:
                                 break;
                             case R.id.itemXoa:
@@ -72,7 +74,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         });
 
 
-
 //        holder.imgAdd_playlist.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -84,7 +85,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startSong(position);
+//                startSong(position);
+                TextView tvThongtin;
+                MainActivity.dialog = new Dialog(context);
+                MainActivity.dialog.setContentView(R.layout.dialog_music);
+                MainActivity.dialog.show();
+                tvThongtin = MainActivity.dialog.findViewById(R.id.tvThongtin);
+                tvThongtin.setText(songList.get(position).getTenBaiHat()+ " - "+songList.get(position).getTenCaSi());
             }
         });
     }

@@ -61,7 +61,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
                 android:layout_toLeftOf="@+id/imgPlay"
-                android:src="@drawable/play" />
+                android:src="@drawable/prev_icon" />
 
             <ImageView
                 android:id="@+id/imgPlay"
