@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import vn.edu.poly.music.Adapter.SongAdapter;
 import vn.edu.poly.music.Fragment.ThuMuc_Fragment;
 import vn.edu.poly.music.R;
 import vn.edu.poly.music.Fragment.Singer_Fragment;
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bnv;
     private Fragment fragment;
     private MySqliteOpenHelper mySqliteOpenHelper;
+    public static MediaPlayer mediaPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_view,menu);
+        inflater.inflate(R.menu.search_view, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -7,9 +7,12 @@
     tools:context=".Activity.MainActivity">
 
     <FrameLayout
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/ll2"
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"/>
+
 
     <LinearLayout
         android:id="@+id/ll2"
@@ -93,4 +96,6 @@
             android:layout_height="wrap_content"
             app:menu="@menu/bottom_navigation_view" />
     </LinearLayout>
+
+
 </RelativeLayout>

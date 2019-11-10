@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.IOException;
 import java.util.List;
 
+import vn.edu.poly.music.Activity.MainActivity;
 import vn.edu.poly.music.Model.Song;
 import vn.edu.poly.music.R;
 import vn.edu.poly.music.SQLite.SongDAO;
@@ -32,7 +33,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     }
 
     private SongDAO songDAO;
-    private MediaPlayer mediaPlayer;
+
+
 
     @NonNull
     @Override
@@ -71,8 +73,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         holder.imgAdd_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
+                if (MainActivity.mediaPlayer.isPlaying()) {
+                    MainActivity.mediaPlayer.stop();
                 }
             }
         });
@@ -85,13 +87,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     }
 
     private void start(int position) {
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        MainActivity.mediaPlayer = new MediaPlayer();
+        MainActivity.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         Uri uri = Uri.parse(songList.get(position).getFileMp3());
         try {
-            mediaPlayer.setDataSource(context, uri);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
+            MainActivity.mediaPlayer.setDataSource(context, uri);
+            MainActivity.mediaPlayer.prepare();
+            MainActivity.mediaPlayer.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
