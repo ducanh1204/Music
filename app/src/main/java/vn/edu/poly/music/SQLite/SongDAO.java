@@ -29,7 +29,7 @@ public class SongDAO {
 
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getReadableDatabase();
 
-        String SQL = "SELECT * FROM " + USER_TABLE ;
+        String SQL = "SELECT * FROM " + USER_TABLE;
 
         Cursor cursor = sqLiteDatabase.rawQuery(SQL, null);
 
@@ -83,6 +83,7 @@ public class SongDAO {
 
         return singerList;
     }
+
     public List<Song> getAll_Singer_Song(String tencasi) {
         List<Song> songList = new ArrayList<>();
 
@@ -125,6 +126,19 @@ public class SongDAO {
         contentValues.put(fileMp3, song.getFileMp3());
 
         long result = sqLiteDatabase.insert(USER_TABLE, null, contentValues);
+        sqLiteDatabase.close();
+        return result;
+    }
+
+    public long update(Song song) {
+        SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(tenBaiHat, song.getTenCaSi());
+        contentValues.put(tenCaSi, song.getTenCaSi());
+        contentValues.put(fileMp3, song.getFileMp3());
+
+        long result = sqLiteDatabase.update(USER_TABLE, contentValues, tenBaiHat + "=?", new String[]{song.getTenBaiHat()});
         sqLiteDatabase.close();
         return result;
     }

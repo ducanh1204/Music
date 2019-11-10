@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/itemThemDSPhat"
+        android:title="@string/titleThemvaods"/>
+    <item
         android:id="@+id/itemSua"
         android:title="@string/title_Sua" />
     <item

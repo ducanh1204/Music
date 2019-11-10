@@ -3,6 +3,16 @@
     <string name="title_Song">Song</string>
     <string name="title_Playlist">Playlists</string>
     <string name="title_Singer">Singer</string>
-    <string name="title_Sua">Sửa</string>
-    <string name="title_Xoa">Xóa</string>
+    <string name="title_Sua">Sửa thông tin bài hát</string>
+    <string name="title_Xoa">Xóa bài hát</string>
+    <string name="title_AddSong">Thêm bài hát</string>
+    <string name="title_AddPlaylist">Thêm danh sách phát</string>
+    <string name="titleThemvaods">Thêm vào danh sách phát</string>
+    <string name="hint_addSong">Tên bài hát</string>
+    <string name="hint_addSinger">Tên ca sĩ</string>
+    <string name="hint_addURL">Đường dẫn (chính xác)</string>
+    <string name="title_Cancel">Hủy</string>
+    <string name="title_OK">Thêm</string>
+    <string name="title_Update">Sửa</string>
+    <string name="hint_addPlaylist">Tên danh sách phát</string>
 </resources>

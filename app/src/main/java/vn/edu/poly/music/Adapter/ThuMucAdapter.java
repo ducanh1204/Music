@@ -75,9 +75,11 @@ public class ThuMucAdapter extends RecyclerView.Adapter<ThuMucAdapter.ThuMUctHol
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(context);
+                ImageView imgClose;
+                final Dialog dialog = new Dialog(context);
                 dialog.setContentView(R.layout.dialog_playlist);
                 dialog.show();
+
                 rvListPlaylist = dialog.findViewById(R.id.rvListPlaylist);
                 dialog.setTitle("Danh sách phát " + thuMucList.get(position).getTenThuMuc());
                 playlistList = playlistDAO.getAll(thuMucList.get(position).getTenThuMuc());
@@ -85,6 +87,13 @@ public class ThuMucAdapter extends RecyclerView.Adapter<ThuMucAdapter.ThuMUctHol
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
                 rvListPlaylist.setLayoutManager(linearLayoutManager);
                 rvListPlaylist.setAdapter(playlistAdapter);
+                imgClose = dialog.findViewById(R.id.imgClose);
+                imgClose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
 
             }
         });

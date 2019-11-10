@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,7 +35,7 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHold
     @NonNull
     @Override
     public SingerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_singer,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_singer, parent, false);
         return new SingerHolder(view);
     }
 
@@ -45,16 +46,24 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(context);
+                ImageView imgClose;
+                final Dialog dialog = new Dialog(context);
                 dialog.setContentView(R.layout.dialog_singer_song_acticity);
                 dialog.show();
                 dialog.setTitle("Bài hát của ca sĩ " + singerList.get(position).getTenCaSi());
                 rvListSinger_Song = dialog.findViewById(R.id.rvListSinger_Song);
                 songList = songDAO.getAll_Singer_Song(singerList.get(position).getTenCaSi());
-                singer_songAdapter = new Singer_SongAdapter(context,songList);
+                singer_songAdapter = new Singer_SongAdapter(context, songList);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
                 rvListSinger_Song.setLayoutManager(linearLayoutManager);
                 rvListSinger_Song.setAdapter(singer_songAdapter);
+                imgClose = dialog.findViewById(R.id.imgClose);
+                imgClose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
 
             }
         });
@@ -67,6 +76,7 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHold
 
     public class SingerHolder extends RecyclerView.ViewHolder {
         private TextView tvtenCaSi;
+
         public SingerHolder(@NonNull View itemView) {
             super(itemView);
             tvtenCaSi = itemView.findViewById(R.id.tvtenCaSi);

@@ -39,14 +39,15 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvtenBaiHat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nam lay tay anh" />
+                android:text="Chưa có bài hát nào" />
 
             <TextView
+                android:id="@+id/tvtenCaSi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tuan Hung"
                 android:textSize="10sp" />
         </LinearLayout>
 
