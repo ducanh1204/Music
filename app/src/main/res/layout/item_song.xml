@@ -46,24 +46,14 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/imgAdd_playlist"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="16dp"
-            android:layout_toLeftOf="@+id/imgDelete_Song"
-            android:src="@drawable/add_playlist" />
-
-        <ImageView
-            android:id="@+id/imgDelete_Song"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/imgPopupMenu"
+            android:layout_width="10dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="16dp"
-            android:src="@drawable/delete_icon" />
+            android:src="@drawable/popupmenu"/>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

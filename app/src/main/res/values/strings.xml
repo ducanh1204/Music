@@ -3,4 +3,6 @@
     <string name="title_Song">Song</string>
     <string name="title_Playlist">Playlists</string>
     <string name="title_Singer">Singer</string>
+    <string name="title_Sua">Sửa</string>
+    <string name="title_Xoa">Xóa</string>
 </resources>
