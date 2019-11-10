@@ -43,11 +43,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     private static int i;
     private RecyclerView rvListSong;
 
-    public SongAdapter(Context context, List<Song> songList) {
-        this.context = context;
-        this.songList = songList;
-    }
-
     public SongAdapter(Context context, RecyclerView rvListSong, List<Song> songList, ImageView imgCD, ImageView imgprev, ImageView imgPlay, ImageView imgNext, TextView tvtenbaiHat, TextView tvTenCaSi) {
         this.context = context;
         this.rvListSong = rvListSong;

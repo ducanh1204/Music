@@ -62,7 +62,7 @@ public class PlaylistDAO {
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(tenBaiHat, playlist.getTenCaSi());
+        contentValues.put(tenBaiHat, playlist.getTenBaiHat());
         contentValues.put(tenCaSi, playlist.getTenCaSi());
         contentValues.put(fileMp3, playlist.getFileMp3());
         contentValues.put(tenThuMuc, playlist.getTenThuMuc());
