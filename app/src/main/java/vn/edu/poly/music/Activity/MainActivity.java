@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     public static Animation animation;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +95,41 @@ public class MainActivity extends AppCompatActivity {
                 final Dialog dialog = new Dialog(MainActivity.this);
                 dialog.setContentView(R.layout.dialog_music);
                 dialog.show();
+                final ImageView btnPlay,btnPrev,btnNext,cd_music_icon;
+                cd_music_icon=dialog.findViewById(R.id.cd_music_icon);
+                btnPrev=dialog.findViewById(R.id.btnprev);
+                btnPlay=dialog.findViewById(R.id.btnplay);
+                btnNext=dialog.findViewById(R.id.btnnext);
+                if(load==0){
+                    btnPlay.setImageResource(R.drawable.play);
+                } else {
+                    btnPlay.setImageResource(R.drawable.pause);
+                }
+                btnPlay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (tvtenbaiHat.getText().toString().equals("Chưa có bài hát nào")) {
+                            Toast.makeText(MainActivity.this, "Chưa có bài hát nào", Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (mediaPlayer.isPlaying() == true) {
+                                mediaPlayer.pause();
+
+                                imgPlay.setImageResource(R.drawable.play);
+                                btnPlay.setImageResource(R.drawable.play);
+                                MainActivity.load = 0;
+                                imgCD.clearAnimation();
+                            } else {
+                                mediaPlayer.start();
+
+                                imgPlay.setImageResource(R.drawable.pause);
+                                btnPlay.setImageResource(R.drawable.pause);
+
+                                imgCD.setAnimation(animation);
+                                MainActivity.load = 1;
+                            }
+                        }
+                    }
+                });
                 dialog.findViewById(R.id.imgClose).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -187,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         ThuMucDAO thuMucDAO = new ThuMucDAO(MainActivity.this);
-        List<ThuMuc> thuMucList=thuMucDAO.getAll();
+        List<ThuMuc> thuMucList = thuMucDAO.getAll();
         dialog.findViewById(R.id.btnOK).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,5 +232,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void demo() {
+        Toast.makeText(MainActivity.this, "OK", Toast.LENGTH_SHORT).show();
     }
 }
