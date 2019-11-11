@@ -41,6 +41,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     private TextView tvtenbaiHat, tvTenCaSi;
     private static int i;
     private RecyclerView rvListSong;
+    private String mediaPath;
 
     public SongAdapter(Context context, RecyclerView rvListSong, List<Song> songList, ImageView imgCD, ImageView imgprev, ImageView imgPlay, ImageView imgNext, TextView tvtenbaiHat, TextView tvTenCaSi) {
         this.context = context;
@@ -53,7 +54,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         this.tvtenbaiHat = tvtenbaiHat;
         this.tvTenCaSi = tvTenCaSi;
     }
-
 
     private SongDAO songDAO;
 
@@ -83,7 +83,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
                                 createAddPlaylist(position);
                                 break;
                             case R.id.itemSua:
-                                createDialogUpdateSong(position);
+//                                createDialogUpdateSong(position);
                                 break;
                             case R.id.itemXoa:
                                 createAlertDialag(position);
@@ -99,6 +99,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity.list=1;
                 i = position;
                 if (MainActivity.load == 0) {
                     startSong(position);
@@ -106,9 +107,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
                     MainActivity.mediaPlayer.stop();
                     startSong(position);
                 }
-
             }
         });
+
+
         imgPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +130,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
                 prevSong();
             }
         });
+
     }
 
     private void autoPlay() {
@@ -182,7 +185,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
                 MainActivity.load = 0;
                 imgCD.clearAnimation();
             } else {
-                imgCD.setAnimation(MainActivity.animation);
+                imgCD.startAnimation(MainActivity.animation);
                 MainActivity.mediaPlayer.start();
                 imgPlay.setImageResource(R.drawable.pause);
                 MainActivity.load = 1;
@@ -204,7 +207,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
                 i = 0;
             }
             startSong(i);
-            imgCD.setAnimation(MainActivity.animation);
+            imgCD.startAnimation(MainActivity.animation);
             autoPlay();
         }
     }
@@ -221,26 +224,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
                 i = songList.size() - 1;
             }
             startSong(i);
-            imgCD.setAnimation(MainActivity.animation);
+            imgCD.startAnimation(MainActivity.animation);
             autoPlay();
         }
-    }
-
-    public void createDialogMusic(int position) {
-        TextView tvThongtin;
-        ImageView imgClose;
-        MainActivity.dialog = new Dialog(context);
-        MainActivity.dialog.setContentView(R.layout.dialog_music);
-        MainActivity.dialog.show();
-        tvThongtin = MainActivity.dialog.findViewById(R.id.tvThongtin);
-        imgClose = MainActivity.dialog.findViewById(R.id.imgClose);
-        tvThongtin.setText(songList.get(position).getTenBaiHat() + " - " + songList.get(position).getTenCaSi());
-        imgClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.dialog.dismiss();
-            }
-        });
     }
 
 
@@ -290,7 +276,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                playlistDAO.delete_song(songList.get(position).getTenBaiHat()+"");
+                playlistDAO.delete_song(songList.get(position).getTenBaiHat() + "");
                 songDAO.delete(songList.get(position).getTenBaiHat());
                 songList.remove(position);
                 notifyDataSetChanged();
@@ -322,41 +308,44 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         }
     }
 
-    private void createDialogUpdateSong(final int position) {
-        final Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.dialog_update_song);
-        dialog.show();
-        dialog.setTitle("Thêm bài hát");
-        final EditText edtUpSinger, edtUpURL;
-        edtUpSinger = dialog.findViewById(R.id.edtUpSinger);
-        edtUpURL = dialog.findViewById(R.id.edtUpURL);
-        dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.findViewById(R.id.btnUpdate).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (edtUpSinger.getText().toString().trim().equals("") || edtUpURL.getText().toString().trim().equals("")) {
-                    Toast.makeText(context, "Nhập đủ dữ liệu", Toast.LENGTH_SHORT).show();
-                } else {
-                    Song song = new Song();
-                    song.setTenBaiHat(songList.get(position).getTenBaiHat());
-                    song.setTenCaSi(edtUpSinger.getText().toString().trim());
-                    song.setFileMp3(edtUpURL.getText().toString().trim());
-                    long result = songDAO.update(song);
-                    if (result > 0) {
-                        Toast.makeText(context, "Sửa thành công", Toast.LENGTH_SHORT).show();
-                        songList = songDAO.getAll();
-                        rvListSong.setAdapter(SongAdapter.this);
-                    } else {
-                        Toast.makeText(context, "Sửa thất bại", Toast.LENGTH_SHORT).show();
-                    }
-                    dialog.dismiss();
-                }
-            }
-        });
-    }
+//    private void createDialogUpdateSong(final int position) {
+//        final Dialog dialog = new Dialog(context);
+//        dialog.setContentView(R.layout.dialog_update_song);
+//        dialog.show();
+//        dialog.setTitle("Thêm bài hát");
+//        final EditText edtUpSinger, edtUpURL;
+//        edtUpSinger = dialog.findViewById(R.id.edtUpSinger);
+//        edtUpURL = dialog.findViewById(R.id.edtUpURL);
+//        dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+//        dialog.findViewById(R.id.btnUpdate).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (edtUpSinger.getText().toString().trim().equals("") || edtUpURL.getText().toString().trim().equals("")) {
+//                    Toast.makeText(context, "Nhập đủ dữ liệu", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Song song = new Song();
+//                    song.setTenBaiHat(songList.get(position).getTenBaiHat());
+//                    song.setTenCaSi(edtUpSinger.getText().toString().trim());
+//                    song.setFileMp3(edtUpURL.getText().toString().trim());
+//                    long result = songDAO.update(song);
+//                    if (result > 0) {
+//                        Toast.makeText(context, "Sửa thành công", Toast.LENGTH_SHORT).show();
+//                        songList = songDAO.getAll();
+//                        rvListSong.setAdapter(SongAdapter.this);
+//                    } else {
+//                        Toast.makeText(context, "Sửa thất bại", Toast.LENGTH_SHORT).show();
+//                    }
+//                    dialog.dismiss();
+//                }
+//            }
+//        });
+//    }
+
+
+
 }

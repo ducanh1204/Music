@@ -52,12 +52,16 @@ public class Song_Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.song_fragment,container,false);
         rvListSong = view.findViewById(R.id.rvListSong);
+
+
         songDAO = new SongDAO(getActivity());
         songList = songDAO.getAll();
-        songAdapter = new SongAdapter(getActivity(),rvListSong,songList,imgCD,imgprev,imgPlay,imgNext,tvTenCaSi,tvtenbaiHat);
+        songAdapter = new SongAdapter(getActivity(),rvListSong,songList,imgCD,imgprev,imgPlay,imgNext,tvtenbaiHat,tvTenCaSi);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvListSong.setLayoutManager(linearLayoutManager);
         rvListSong.setAdapter(songAdapter);
+
+
         return view;
     }
 }
