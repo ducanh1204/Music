@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
         playlistDAO = new PlaylistDAO(this);
         songDAO = new SongDAO(this);
 
-        songList1 = songDAO.getAll();
 
 
         fragment = new Song_Fragment(this, songList1);
@@ -234,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
                 mediaPlayer.stop();
             }
             if (list == 1) {
+                songList1 = songDAO.getAll();
                 if (i > songList1.size() - 1) {
                     i = 0;
                 }
@@ -265,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 mediaPlayer.stop();
             }
             if (list == 1) {
+                songList1 = songDAO.getAll();
                 if (i < 0) {
                     i = songList1.size() - 1;
                 }
