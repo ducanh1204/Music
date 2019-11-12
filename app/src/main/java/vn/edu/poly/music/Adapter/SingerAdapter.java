@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import vn.edu.poly.music.Activity.MainActivity;
 import vn.edu.poly.music.Model.Singer;
 import vn.edu.poly.music.Model.Song;
 import vn.edu.poly.music.R;
@@ -27,9 +28,10 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHold
     private SongDAO songDAO;
     private RecyclerView rvListSinger_Song;
 
-    public SingerAdapter(Context context, List<Singer> singerList) {
+    public SingerAdapter(Context context, List<Singer> singerList,List<Song> songList) {
         this.context = context;
         this.singerList = singerList;
+        this.songList = songList;
     }
 
     @NonNull
@@ -53,6 +55,7 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHold
                 dialog.setTitle("Bài hát của ca sĩ " + singerList.get(position).getTenCaSi());
                 rvListSinger_Song = dialog.findViewById(R.id.rvListSinger_Song);
                 songList = songDAO.getAll_Singer_Song(singerList.get(position).getTenCaSi());
+                MainActivity.tenCasi = singerList.get(position).getTenCaSi();
                 singer_songAdapter = new Singer_SongAdapter(context, songList);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
                 rvListSinger_Song.setLayoutManager(linearLayoutManager);

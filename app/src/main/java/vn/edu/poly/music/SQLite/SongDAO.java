@@ -121,7 +121,7 @@ public class SongDAO {
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(tenBaiHat, song.getTenCaSi());
+        contentValues.put(tenBaiHat, song.getTenBaiHat());
         contentValues.put(tenCaSi, song.getTenCaSi());
         contentValues.put(fileMp3, song.getFileMp3());
 

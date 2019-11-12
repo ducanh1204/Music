@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,21 +25,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import vn.edu.poly.music.Adapter.SongAdapter;
 import vn.edu.poly.music.Fragment.ThuMuc_Fragment;
+import vn.edu.poly.music.Model.Playlist;
 import vn.edu.poly.music.Model.Song;
 import vn.edu.poly.music.Model.ThuMuc;
 import vn.edu.poly.music.R;
 import vn.edu.poly.music.Fragment.Singer_Fragment;
 import vn.edu.poly.music.Fragment.Song_Fragment;
 import vn.edu.poly.music.SQLite.MySqliteOpenHelper;
+import vn.edu.poly.music.SQLite.PlaylistDAO;
 import vn.edu.poly.music.SQLite.SongDAO;
 import vn.edu.poly.music.SQLite.ThuMucDAO;
 
@@ -47,17 +54,25 @@ public class MainActivity extends AppCompatActivity {
     private Fragment fragment;
     private MySqliteOpenHelper mySqliteOpenHelper;
     public static MediaPlayer mediaPlayer;
-    public static Dialog dialog;
-    private List<Song> songList;
     private SongDAO songDAO;
-    private ImageView imgCD, imgprev, imgPlay, imgNext;
-    private TextView tvtenbaiHat, tvTenCaSi;
-    public static int load = 0;
-    public static int list;
-    public static Animation animation;
     private String mediaPath = "";
     public static final int REQUEST_CODE = 1;
-    Animation animation2;
+
+
+    public static Animation animation;
+    public static int load = 0;
+    public static ImageView imgCD, imgPrev, imgPlay, imgNext;
+    public static TextView tvTenbaiHat, tvThoigian1, tvThoiGian2;
+    public static SeekBar seekBar;
+    public static int i;
+    public static int list;
+
+    private List<Song> songList1;
+    private List<Song> songList2;
+    private List<Playlist> playlistList;
+    public static String tenCasi;
+    public static String tenThuMuc;
+    private PlaylistDAO playlistDAO;
 
 
     @Override
@@ -68,98 +83,235 @@ public class MainActivity extends AppCompatActivity {
         mySqliteOpenHelper.createDataBase();
         bnv = findViewById(R.id.bnv);
         imgCD = findViewById(R.id.imgCD);
-        imgprev = findViewById(R.id.imgPrev);
+        imgPrev = findViewById(R.id.imgPrev);
         imgPlay = findViewById(R.id.imgPlay);
         imgNext = findViewById(R.id.imgNext);
-        tvtenbaiHat = findViewById(R.id.tvtenBaiHat);
-        tvTenCaSi = findViewById(R.id.tvtenCaSi);
+        tvTenbaiHat = findViewById(R.id.tvtenBaiHat);
         animation = AnimationUtils.loadAnimation(this, R.anim.disc_rotate);
-        animation2=AnimationUtils.loadAnimation(this, R.anim.disc_rotate);
 
+        seekBar = findViewById(R.id.SeekBar);
+        tvThoigian1 = findViewById(R.id.tvthoigian1);
+        tvThoiGian2 = findViewById(R.id.tvthoigian2);
 
+        playlistDAO = new PlaylistDAO(this);
         songDAO = new SongDAO(this);
-        songList = songDAO.getAll();
+
+        songList1 = songDAO.getAll();
 
 
-        fragment = new Song_Fragment(this,songList,imgCD,imgprev,imgPlay,imgNext,tvtenbaiHat,tvTenCaSi);
+        fragment = new Song_Fragment(this, songList1);
         loadFragment(fragment);
+
+
 
         bnv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.item_song:
-                        fragment = new Song_Fragment(MainActivity.this, songList,imgCD,imgprev,imgPlay,imgNext,tvtenbaiHat,tvTenCaSi);
+                        fragment = new Song_Fragment(MainActivity.this, songList1);
                         loadFragment(fragment);
                         return true;
                     case R.id.item_playlist:
-                        fragment = new ThuMuc_Fragment();
+                        fragment = new ThuMuc_Fragment(MainActivity.this, playlistList);
                         loadFragment(fragment);
                         return true;
                     case R.id.item_singer:
-                        fragment = new Singer_Fragment();
+                        fragment = new Singer_Fragment(MainActivity.this, songList2);
                         loadFragment(fragment);
                         return true;
                 }
                 return false;
             }
         });
-        findViewById(R.id.ll2).setOnClickListener(new View.OnClickListener() {
+
+        imgPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(MainActivity.this);
-                dialog.setContentView(R.layout.dialog_music);
-                dialog.show();
-                final ImageView btnPlay, btnPrev, btnNext, cd_music_icon;
-                cd_music_icon = dialog.findViewById(R.id.cd_music_icon);
-                btnPrev = dialog.findViewById(R.id.btnprev);
-                btnPlay = dialog.findViewById(R.id.btnplay);
-                btnNext = dialog.findViewById(R.id.btnnext);
-                if (load == 0) {
-                    btnPlay.setImageResource(R.drawable.play);
+                checkPlay();
+
+            }
+        });
+        imgNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextSong();
+            }
+        });
+        imgPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prevSong();
+            }
+        });
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
+                    Toast.makeText(MainActivity.this, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
                 } else {
-                    btnPlay.setImageResource(R.drawable.pause);
-                    cd_music_icon.startAnimation(animation2);
+                    mediaPlayer.seekTo(seekBar.getProgress());
                 }
-                btnPlay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (tvtenbaiHat.getText().toString().equals("Chưa có bài hát nào")) {
-                            Toast.makeText(MainActivity.this, "Chưa có bài hát nào", Toast.LENGTH_SHORT).show();
-                        } else {
-                            if (mediaPlayer.isPlaying() == true) {
-                                mediaPlayer.pause();
-                                imgPlay.setImageResource(R.drawable.play);
-                                btnPlay.setImageResource(R.drawable.play);
-                                MainActivity.load = 0;
-                                cd_music_icon.clearAnimation();
-                                cd_music_icon.setAnimation(null);
-                            } else {
-                                mediaPlayer.start();
-
-                                imgPlay.setImageResource(R.drawable.pause);
-                                btnPlay.setImageResource(R.drawable.pause);
-
-                                cd_music_icon.startAnimation(animation2);
-                                imgCD.startAnimation(animation);
-                                MainActivity.load = 1;
-                            }
-                        }
-                    }
-                });
-
-
-
-
-                dialog.findViewById(R.id.imgClose).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
             }
         });
     }
+
+
+    private void checkPlay() {
+        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
+            Toast.makeText(MainActivity.this, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
+        } else {
+            if (mediaPlayer.isPlaying() == true) {
+                mediaPlayer.pause();
+                imgPlay.setImageResource(R.drawable.play);
+                load = 0;
+                imgCD.clearAnimation();
+            } else {
+                imgCD.startAnimation(animation);
+                mediaPlayer.start();
+                imgPlay.setImageResource(R.drawable.pause);
+                load = 1;
+            }
+
+            setTimeTotal();
+            updateTimeSong();
+        }
+    }
+
+    private void startSong(int position) {
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        if (list == 1) {
+            Uri uri = Uri.parse(songList1.get(position).getFileMp3());
+            tvTenbaiHat.setText(songList1.get(position).getTenBaiHat() + " - " + songList1.get(position).getTenCaSi());
+            check(uri);
+        } else if (list == 2) {
+            Uri uri = Uri.parse(playlistList.get(position).getFileMp3());
+            tvTenbaiHat.setText(playlistList.get(position).getTenBaiHat() + " - " + playlistList.get(position).getTenCaSi());
+            check(uri);
+        } else if (list == 3) {
+            Uri uri = Uri.parse(songList2.get(position).getFileMp3());
+            tvTenbaiHat.setText(songList2.get(position).getTenBaiHat() + " - " + songList2.get(position).getTenCaSi());
+            check(uri);
+        }
+        setTimeTotal();
+        updateTimeSong();
+    }
+
+    private void check(Uri uri) {
+        try {
+            mediaPlayer.setDataSource(MainActivity.this, uri);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            imgCD.startAnimation(animation);
+            load = 1;
+            if (mediaPlayer.isPlaying() == true) {
+                imgPlay.setImageResource(R.drawable.pause);
+            } else {
+                imgPlay.setImageResource(R.drawable.play);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            imgCD.clearAnimation();
+            Toast.makeText(MainActivity.this, "Loi phat nhac", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void nextSong() {
+        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
+            Toast.makeText(MainActivity.this, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
+        } else {
+            i++;
+            if (load == 1) {
+                mediaPlayer.stop();
+            }
+            if (list == 1) {
+                if (i > songList1.size() - 1) {
+                    i = 0;
+                }
+            } else if (list == 2) {
+                playlistList = playlistDAO.getAll(tenThuMuc);
+                if (i > playlistList.size() - 1) {
+                    i = 0;
+                }
+            } else if (list == 3) {
+                songList2 = songDAO.getAll_Singer_Song(tenCasi);
+                if (i > songList2.size() - 1) {
+                    i = 0;
+                }
+            }
+            startSong(i);
+            imgCD.startAnimation(animation);
+            setTimeTotal();
+            updateTimeSong();
+        }
+
+    }
+
+    private void prevSong() {
+        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
+            Toast.makeText(MainActivity.this, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
+        } else {
+            i--;
+            if (load == 1) {
+                mediaPlayer.stop();
+            }
+            if (list == 1) {
+                if (i < 0) {
+                    i = songList1.size() - 1;
+                }
+            } else if (list == 2) {
+                playlistList = playlistDAO.getAll(tenThuMuc);
+                if (i < 0) {
+                    i = playlistList.size() - 1;
+                }
+            } else if (list == 3) {
+                songList2 = songDAO.getAll_Singer_Song(tenCasi);
+                if (i < 0) {
+                    i = songList2.size() - 1;
+                }
+            }
+            startSong(i);
+            imgCD.startAnimation(animation);
+            setTimeTotal();
+            updateTimeSong();
+        }
+    }
+
+    private void setTimeTotal() {
+        SimpleDateFormat dinhDangGio = new SimpleDateFormat("mm:ss");
+        tvThoiGian2.setText(dinhDangGio.format(mediaPlayer.getDuration()));
+        seekBar.setMax(mediaPlayer.getDuration());
+    }
+
+    private void updateTimeSong() {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SimpleDateFormat dinhDangGio = new SimpleDateFormat("mm:ss");
+                tvThoigian1.setText(dinhDangGio.format(mediaPlayer.getCurrentPosition()));
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        nextSong();
+                    }
+                });
+
+                handler.postDelayed(this, 500);
+                seekBar.setProgress(mediaPlayer.getCurrentPosition());
+            }
+        }, 100);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -231,7 +383,7 @@ public class MainActivity extends AppCompatActivity {
                     long result = songDAO.insert(song);
                     if (result > 0) {
                         Toast.makeText(MainActivity.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
-                        fragment = new Song_Fragment(MainActivity.this, songList,imgCD,imgprev,imgPlay,imgNext,tvtenbaiHat,tvTenCaSi);
+                        fragment = new Song_Fragment(MainActivity.this, songList1);
                         loadFragment(fragment);
                     } else {
                         Toast.makeText(MainActivity.this, "Thêm thất bại", Toast.LENGTH_SHORT).show();

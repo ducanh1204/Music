@@ -1,5 +1,6 @@
 package vn.edu.poly.music.Fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import vn.edu.poly.music.Adapter.ThuMucAdapter;
+import vn.edu.poly.music.Model.Playlist;
 import vn.edu.poly.music.Model.ThuMuc;
 import vn.edu.poly.music.R;
 import vn.edu.poly.music.SQLite.ThuMucDAO;
@@ -23,6 +25,14 @@ public class ThuMuc_Fragment extends Fragment {
     private List<ThuMuc> thuMucList;
     private ThuMucAdapter thuMucAdapter;
     private ThuMucDAO thuMucDAO;
+    private Context context;
+    private List<Playlist> playlistList;
+
+    public ThuMuc_Fragment(Context context, List<Playlist> playlistList) {
+        this.context = context;
+        this.playlistList = playlistList;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +45,7 @@ public class ThuMuc_Fragment extends Fragment {
         rvListThuMuc = view.findViewById(R.id.rvListThuMuc);
         thuMucDAO = new ThuMucDAO(getActivity());
         thuMucList = thuMucDAO.getAll();
-        thuMucAdapter = new ThuMucAdapter(getActivity(),thuMucList);
+        thuMucAdapter = new ThuMucAdapter(getActivity(),thuMucList,playlistList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvListThuMuc.setLayoutManager(linearLayoutManager);
         rvListThuMuc.setAdapter(thuMucAdapter);

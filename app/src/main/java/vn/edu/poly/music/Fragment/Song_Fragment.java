@@ -29,23 +29,16 @@ public class Song_Fragment extends Fragment {
     private List<Song> songList;
     private SongDAO songDAO;
     private Context context;
-    private ImageView imgCD, imgprev,imgPlay,imgNext;
-    private TextView tvtenbaiHat, tvTenCaSi;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-    public Song_Fragment(Context context,List<Song> songList, ImageView imgCD, ImageView imgprev, ImageView imgPlay, ImageView imgNext, TextView tvtenbaiHat, TextView tvTenCaSi) {
+
+    public Song_Fragment(Context context,List<Song> songList) {
         this.context = context;
         this.songList=songList;
-        this.imgCD = imgCD;
-        this.imgprev = imgprev;
-        this.imgPlay = imgPlay;
-        this.imgNext = imgNext;
-        this.tvtenbaiHat = tvtenbaiHat;
-        this.tvTenCaSi = tvTenCaSi;
     }
+
 
     @Nullable
     @Override
@@ -56,7 +49,7 @@ public class Song_Fragment extends Fragment {
 
         songDAO = new SongDAO(getActivity());
         songList = songDAO.getAll();
-        songAdapter = new SongAdapter(getActivity(),rvListSong,songList,imgCD,imgprev,imgPlay,imgNext,tvtenbaiHat,tvTenCaSi);
+        songAdapter = new SongAdapter(getActivity(),rvListSong,songList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvListSong.setLayoutManager(linearLayoutManager);
         rvListSong.setAdapter(songAdapter);

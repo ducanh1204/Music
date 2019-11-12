@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import vn.edu.poly.music.Activity.MainActivity;
@@ -34,28 +37,33 @@ import vn.edu.poly.music.SQLite.PlaylistDAO;
 import vn.edu.poly.music.SQLite.SongDAO;
 import vn.edu.poly.music.SQLite.ThuMucDAO;
 
+import static vn.edu.poly.music.Activity.MainActivity.animation;
+import static vn.edu.poly.music.Activity.MainActivity.i;
+import static vn.edu.poly.music.Activity.MainActivity.imgCD;
+import static vn.edu.poly.music.Activity.MainActivity.imgNext;
+import static vn.edu.poly.music.Activity.MainActivity.imgPlay;
+import static vn.edu.poly.music.Activity.MainActivity.imgPrev;
+import static vn.edu.poly.music.Activity.MainActivity.list;
+import static vn.edu.poly.music.Activity.MainActivity.load;
+import static vn.edu.poly.music.Activity.MainActivity.mediaPlayer;
+import static vn.edu.poly.music.Activity.MainActivity.seekBar;
+import static vn.edu.poly.music.Activity.MainActivity.tvTenbaiHat;
+import static vn.edu.poly.music.Activity.MainActivity.tvThoiGian2;
+import static vn.edu.poly.music.Activity.MainActivity.tvThoigian1;
+
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     private Context context;
     private List<Song> songList;
-    private ImageView imgCD, imgprev, imgPlay, imgNext;
-    private TextView tvtenbaiHat, tvTenCaSi;
-    private static int i;
     private RecyclerView rvListSong;
     private String mediaPath;
+    private SongDAO songDAO;
+//    private static int i;
 
-    public SongAdapter(Context context, RecyclerView rvListSong, List<Song> songList, ImageView imgCD, ImageView imgprev, ImageView imgPlay, ImageView imgNext, TextView tvtenbaiHat, TextView tvTenCaSi) {
+    public SongAdapter(Context context, RecyclerView rvListSong, List<Song> songList) {
         this.context = context;
         this.rvListSong = rvListSong;
         this.songList = songList;
-        this.imgCD = imgCD;
-        this.imgprev = imgprev;
-        this.imgPlay = imgPlay;
-        this.imgNext = imgNext;
-        this.tvtenbaiHat = tvtenbaiHat;
-        this.tvTenCaSi = tvTenCaSi;
     }
-
-    private SongDAO songDAO;
 
 
     @NonNull
@@ -99,68 +107,89 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.list=1;
                 i = position;
-                if (MainActivity.load == 0) {
-                    startSong(position);
+                list=1;
+                if (load == 0) {
+                    startSong(i);
                 } else {
-                    MainActivity.mediaPlayer.stop();
-                    startSong(position);
+                    mediaPlayer.stop();
+                    startSong(i);
                 }
             }
         });
 
 
-        imgPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkPlay();
-
-            }
-        });
-        imgNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextSong();
-            }
-        });
-        imgprev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                prevSong();
-            }
-        });
-
+//        imgPlay.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                checkPlay();
+//
+//            }
+//        });
+//        imgNext.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                nextSong();
+//            }
+//        });
+//        imgPrev.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                prevSong();
+//            }
+//        });
+//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//                if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
+//                    Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    mediaPlayer.seekTo(seekBar.getProgress());
+//                }
+//            }
+//        });
     }
 
-    private void autoPlay() {
-        MainActivity.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                i++;
-                if (MainActivity.load == 1) {
-                    MainActivity.mediaPlayer.stop();
-                }
-                if (i == songList.size()) {
-                    i = 0;
-                }
-                startSong(i);
-                imgCD.setAnimation(MainActivity.animation);
-            }
-        });
-    }
+//    private void checkPlay() {
+//        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
+//            Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
+//        } else {
+//            if (mediaPlayer.isPlaying() == true) {
+//                mediaPlayer.pause();
+//                imgPlay.setImageResource(R.drawable.play);
+//                load = 0;
+//                imgCD.clearAnimation();
+//            } else {
+//                imgCD.startAnimation(animation);
+//                mediaPlayer.start();
+//                imgPlay.setImageResource(R.drawable.pause);
+//                load = 1;
+//            }
+//
+//            setTimeTotal();
+//            updateTimeSong();
+//        }
+//    }
 
     private void startSong(int position) {
-        MainActivity.mediaPlayer = new MediaPlayer();
-        MainActivity.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         Uri uri = Uri.parse(songList.get(position).getFileMp3());
         try {
-            MainActivity.mediaPlayer.setDataSource(context, uri);
-            MainActivity.mediaPlayer.prepare();
-            MainActivity.mediaPlayer.start();
-            imgCD.startAnimation(MainActivity.animation);
-            MainActivity.load = 1;
-            if (MainActivity.mediaPlayer.isPlaying() == true) {
+            mediaPlayer.setDataSource(context, uri);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            imgCD.startAnimation(animation);
+            load = 1;
+            if (mediaPlayer.isPlaying() == true) {
                 imgPlay.setImageResource(R.drawable.pause);
             } else {
                 imgPlay.setImageResource(R.drawable.play);
@@ -170,64 +199,87 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
             imgCD.clearAnimation();
             Toast.makeText(context, "Loi phat nhac", Toast.LENGTH_SHORT).show();
         }
-        tvtenbaiHat.setText(songList.get(position).getTenBaiHat());
-        tvTenCaSi.setText(songList.get(position).getTenCaSi());
-        autoPlay();
+        tvTenbaiHat.setText(songList.get(position).getTenBaiHat() + " - " + songList.get(position).getTenCaSi());
+        setTimeTotal();
+        updateTimeSong();
     }
 
-    public void checkPlay() {
-        if (tvtenbaiHat.getText().toString().equals("Chưa có bài hát nào")) {
-            Toast.makeText(context, "Chưa có bài hát nào", Toast.LENGTH_SHORT).show();
-        } else {
-            if (MainActivity.mediaPlayer.isPlaying() == true) {
-                MainActivity.mediaPlayer.pause();
-                imgPlay.setImageResource(R.drawable.play);
-                MainActivity.load = 0;
-                imgCD.clearAnimation();
-            } else {
-                imgCD.startAnimation(MainActivity.animation);
-                MainActivity.mediaPlayer.start();
-                imgPlay.setImageResource(R.drawable.pause);
-                MainActivity.load = 1;
-            }
+//    private void nextSong() {
+//        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
+//            Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
+//        } else {
+//            i++;
+//            if (load == 1) {
+//                mediaPlayer.stop();
+//            }
+//            if (i > songList.size() - 1) {
+//                i = 0;
+//            }
+//            startSong(i);
+//            imgCD.startAnimation(animation);
+//            setTimeTotal();
+//            updateTimeSong();
+//        }
+//    }
+//
+//    private void prevSong() {
+//        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
+//            Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
+//        } else {
+//            i--;
+//            if (load == 1) {
+//                mediaPlayer.stop();
+//            }
+//            if (i < 0) {
+//                i = songList.size() - 1;
+//            }
+//            startSong(i);
+//            imgCD.startAnimation(animation);
+//            setTimeTotal();
+//            updateTimeSong();
+//        }
+//    }
 
-            autoPlay();
-        }
+    private void setTimeTotal() {
+        SimpleDateFormat dinhDangGio = new SimpleDateFormat("mm:ss");
+        tvThoiGian2.setText(dinhDangGio.format(mediaPlayer.getDuration()));
+        seekBar.setMax(mediaPlayer.getDuration());
     }
 
-    private void nextSong() {
-        if (tvtenbaiHat.getText().toString().equals("Chưa có bài hát nào")) {
-            Toast.makeText(context, "Chưa có bài hát nào", Toast.LENGTH_SHORT).show();
-        } else {
-            i++;
-            if (MainActivity.load == 1) {
-                MainActivity.mediaPlayer.stop();
+    private void updateTimeSong() {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SimpleDateFormat dinhDangGio = new SimpleDateFormat("mm:ss");
+                tvThoigian1.setText(dinhDangGio.format(mediaPlayer.getCurrentPosition()));
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
+                            Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
+                        } else {
+                            i++;
+                            if (load == 1) {
+                                mediaPlayer.stop();
+                            }
+                            if (i > songList.size() - 1) {
+                                i = 0;
+                            }
+                            startSong(i);
+                            imgCD.startAnimation(animation);
+                            setTimeTotal();
+                            updateTimeSong();
+                        }
+                    }
+                });
+
+                handler.postDelayed(this, 500);
+                seekBar.setProgress(mediaPlayer.getCurrentPosition());
             }
-            if (i == songList.size()) {
-                i = 0;
-            }
-            startSong(i);
-            imgCD.startAnimation(MainActivity.animation);
-            autoPlay();
-        }
+        }, 100);
     }
 
-    private void prevSong() {
-        if (tvtenbaiHat.getText().toString().equals("Chưa có bài hát nào")) {
-            Toast.makeText(context, "Chưa có bài hát nào", Toast.LENGTH_SHORT).show();
-        } else {
-            i--;
-            if (MainActivity.load == 1) {
-                MainActivity.mediaPlayer.stop();
-            }
-            if (i < 0) {
-                i = songList.size() - 1;
-            }
-            startSong(i);
-            imgCD.startAnimation(MainActivity.animation);
-            autoPlay();
-        }
-    }
 
 
     private void createAddPlaylist(final int position) {
@@ -307,7 +359,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
             imgPopupmenu = itemView.findViewById(R.id.imgPopupMenu);
         }
     }
-
+// Sửa bài hát
 //    private void createDialogUpdateSong(final int position) {
 //        final Dialog dialog = new Dialog(context);
 //        dialog.setContentView(R.layout.dialog_update_song);
@@ -345,7 +397,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
 //            }
 //        });
 //    }
-
 
 
 }

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import vn.edu.poly.music.Activity.MainActivity;
 import vn.edu.poly.music.Model.Playlist;
 import vn.edu.poly.music.Model.ThuMuc;
 import vn.edu.poly.music.R;
@@ -32,9 +33,10 @@ public class ThuMucAdapter extends RecyclerView.Adapter<ThuMucAdapter.ThuMUctHol
     private RecyclerView rvListPlaylist;
 
 
-    public ThuMucAdapter(Context context, List<ThuMuc> thuMucList) {
+    public ThuMucAdapter(Context context, List<ThuMuc> thuMucList,List<Playlist> playlistList) {
         this.context = context;
         this.thuMucList = thuMucList;
+        this.playlistList=playlistList;
     }
 
     @NonNull
@@ -49,6 +51,7 @@ public class ThuMucAdapter extends RecyclerView.Adapter<ThuMucAdapter.ThuMUctHol
 
 
         playlistDAO = new PlaylistDAO(context);
+        thuMucDAO = new ThuMucDAO(context);
         holder.tvtenThuMuc.setText(thuMucList.get(position).getTenThuMuc());
         holder.imgDelete_ThuMuc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +86,7 @@ public class ThuMucAdapter extends RecyclerView.Adapter<ThuMucAdapter.ThuMUctHol
                 rvListPlaylist = dialog.findViewById(R.id.rvListPlaylist);
                 dialog.setTitle("Danh sách phát " + thuMucList.get(position).getTenThuMuc());
                 playlistList = playlistDAO.getAll(thuMucList.get(position).getTenThuMuc());
+                MainActivity.tenThuMuc=thuMucList.get(position).getTenThuMuc();
                 playlistAdapter = new PlaylistAdapter(context, playlistList);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
                 rvListPlaylist.setLayoutManager(linearLayoutManager);
