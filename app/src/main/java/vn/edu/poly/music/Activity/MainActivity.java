@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Song> songList1;
     private List<Song> songList2;
     private List<Playlist> playlistList;
+    private ThuMucDAO thuMucDAO;
+
     public static String tenCasi;
     public static String tenThuMuc;
     private PlaylistDAO playlistDAO;
@@ -95,12 +98,12 @@ public class MainActivity extends AppCompatActivity {
 
         playlistDAO = new PlaylistDAO(this);
         songDAO = new SongDAO(this);
+        thuMucDAO = new ThuMucDAO(this);
 
 
 
         fragment = new Song_Fragment(this, songList1);
         loadFragment(fragment);
-
 
 
         bnv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -314,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // Create menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -404,22 +408,30 @@ public class MainActivity extends AppCompatActivity {
         dialog.setTitle("Thêm bài hát");
         final EditText edtAddPlaylist;
         edtAddPlaylist = dialog.findViewById(R.id.edtAddPlaylist);
-        dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        ThuMucDAO thuMucDAO = new ThuMucDAO(MainActivity.this);
-        List<ThuMuc> thuMucList = thuMucDAO.getAll();
         dialog.findViewById(R.id.btnOK).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (edtAddPlaylist.getText().toString().trim().equals("")) {
-                    Toast.makeText(MainActivity.this, "Nhập đủ dữ liệu", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Nhập dữ liệu", Toast.LENGTH_SHORT).show();
                 } else {
+                    ThuMuc thuMuc = new ThuMuc();
+                    thuMuc.setTenThuMuc(edtAddPlaylist.getText().toString().trim());
+                    long result = thuMucDAO.insert(thuMuc);
+                    if (result > 0) {
+                        Toast.makeText(MainActivity.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
+                        fragment = new ThuMuc_Fragment(MainActivity.this, playlistList);
+                        loadFragment(fragment);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Thêm thất bại", Toast.LENGTH_SHORT).show();
+                    }
                     dialog.dismiss();
                 }
+            }
+        });
+        dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
     }

@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -26,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.poly.music.Activity.MainActivity;
@@ -51,18 +54,21 @@ import static vn.edu.poly.music.Activity.MainActivity.tvTenbaiHat;
 import static vn.edu.poly.music.Activity.MainActivity.tvThoiGian2;
 import static vn.edu.poly.music.Activity.MainActivity.tvThoigian1;
 
-public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
+public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements Filterable {
     private Context context;
     private List<Song> songList;
     private RecyclerView rvListSong;
     private String mediaPath;
     private SongDAO songDAO;
-//    private static int i;
+    //    private static int i;
+    private List<Song> songList2;
+
 
     public SongAdapter(Context context, RecyclerView rvListSong, List<Song> songList) {
         this.context = context;
         this.rvListSong = rvListSong;
         this.songList = songList;
+        this.songList2=new ArrayList<>(songList);
     }
 
 
@@ -90,9 +96,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
                             case R.id.itemThemDSPhat:
                                 createAddPlaylist(position);
                                 break;
-                            case R.id.itemSua:
-//                                createDialogUpdateSong(position);
-                                break;
                             case R.id.itemXoa:
                                 createAlertDialag(position);
                                 break;
@@ -108,7 +111,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
             @Override
             public void onClick(View v) {
                 i = position;
-                list=1;
+                list = 1;
                 if (load == 0) {
                     startSong(i);
                 } else {
@@ -281,7 +284,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     }
 
 
-
     private void createAddPlaylist(final int position) {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_dsthumuc);
@@ -348,6 +350,38 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         return songList.size();
     }
 
+    private Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Song> songs = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0) {
+                songs.addAll(songList2);
+            } else {
+                String fillParent = constraint.toString().toLowerCase().trim();
+                for (Song item : songList2) {
+                    if (item.getTenBaiHat().toLowerCase().contains(fillParent)) {
+                        songs.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = songs;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            songList.clear();
+            songList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
     public class SongHolder extends RecyclerView.ViewHolder {
         private TextView tvtenBaiHat, tvtenCaSi;
         private ImageView imgPopupmenu;
@@ -359,44 +393,4 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
             imgPopupmenu = itemView.findViewById(R.id.imgPopupMenu);
         }
     }
-// Sửa bài hát
-//    private void createDialogUpdateSong(final int position) {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.setContentView(R.layout.dialog_update_song);
-//        dialog.show();
-//        dialog.setTitle("Thêm bài hát");
-//        final EditText edtUpSinger, edtUpURL;
-//        edtUpSinger = dialog.findViewById(R.id.edtUpSinger);
-//        edtUpURL = dialog.findViewById(R.id.edtUpURL);
-//        dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//            }
-//        });
-//        dialog.findViewById(R.id.btnUpdate).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (edtUpSinger.getText().toString().trim().equals("") || edtUpURL.getText().toString().trim().equals("")) {
-//                    Toast.makeText(context, "Nhập đủ dữ liệu", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Song song = new Song();
-//                    song.setTenBaiHat(songList.get(position).getTenBaiHat());
-//                    song.setTenCaSi(edtUpSinger.getText().toString().trim());
-//                    song.setFileMp3(edtUpURL.getText().toString().trim());
-//                    long result = songDAO.update(song);
-//                    if (result > 0) {
-//                        Toast.makeText(context, "Sửa thành công", Toast.LENGTH_SHORT).show();
-//                        songList = songDAO.getAll();
-//                        rvListSong.setAdapter(SongAdapter.this);
-//                    } else {
-//                        Toast.makeText(context, "Sửa thất bại", Toast.LENGTH_SHORT).show();
-//                    }
-//                    dialog.dismiss();
-//                }
-//            }
-//        });
-//    }
-
-
 }

@@ -3,10 +3,15 @@ package vn.edu.poly.music.Fragment;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,9 +34,11 @@ public class Song_Fragment extends Fragment {
     private List<Song> songList;
     private SongDAO songDAO;
     private Context context;
+    private List<Song> songList2;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     public Song_Fragment(Context context,List<Song> songList) {
@@ -56,5 +63,30 @@ public class Song_Fragment extends Fragment {
 
 
         return view;
+    }
+
+
+    // Create menu, and search song
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem item = menu.findItem(R.id.app_bar_search);
+        SearchView searchView = (SearchView) item.getActionView();
+
+        searchView.setQueryHint("Nhập tên bài hát");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                songAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }
