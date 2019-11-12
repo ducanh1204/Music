@@ -41,11 +41,15 @@ import vn.edu.poly.music.SQLite.SongDAO;
 import vn.edu.poly.music.SQLite.ThuMucDAO;
 
 import static vn.edu.poly.music.Activity.MainActivity.animation;
+import static vn.edu.poly.music.Activity.MainActivity.checkRandom;
+import static vn.edu.poly.music.Activity.MainActivity.checkRepeat;
 import static vn.edu.poly.music.Activity.MainActivity.i;
 import static vn.edu.poly.music.Activity.MainActivity.imgCD;
 import static vn.edu.poly.music.Activity.MainActivity.imgNext;
 import static vn.edu.poly.music.Activity.MainActivity.imgPlay;
 import static vn.edu.poly.music.Activity.MainActivity.imgPrev;
+import static vn.edu.poly.music.Activity.MainActivity.imgRandom;
+import static vn.edu.poly.music.Activity.MainActivity.imgRepeat;
 import static vn.edu.poly.music.Activity.MainActivity.list;
 import static vn.edu.poly.music.Activity.MainActivity.load;
 import static vn.edu.poly.music.Activity.MainActivity.mediaPlayer;
@@ -68,7 +72,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         this.context = context;
         this.rvListSong = rvListSong;
         this.songList = songList;
-        this.songList2=new ArrayList<>(songList);
+        this.songList2 = new ArrayList<>(songList);
     }
 
 
@@ -112,6 +116,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
             public void onClick(View v) {
                 i = position;
                 list = 1;
+                checkRepeat = 0;
+                checkRandom = 0;
+                imgRandom.setImageResource(R.drawable.random_off);
+                imgRepeat.setImageResource(R.drawable.repeate);
                 if (load == 0) {
                     startSong(i);
                 } else {
@@ -262,12 +270,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                         if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
                             Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
                         } else {
-                            i++;
                             if (load == 1) {
                                 mediaPlayer.stop();
                             }
-                            if (i > songList.size() - 1) {
-                                i = 0;
+                            if (checkRandom == 0 && checkRepeat == 0) {
+                                i++;
+
+                                if (i > songList.size() - 1) {
+                                    i = 0;
+                                }
+                            } else if (checkRandom == 1) {
+                                i = startRandom(0, songList.size()-1);
                             }
                             startSong(i);
                             imgCD.startAnimation(animation);
@@ -276,13 +289,16 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                         }
                     }
                 });
-
                 handler.postDelayed(this, 500);
                 seekBar.setProgress(mediaPlayer.getCurrentPosition());
             }
         }, 100);
     }
 
+    private int startRandom(int min, int max) {
+        int j = (int) (Math.random() * (max - min + 1) + min);
+        return j;
+    }
 
     private void createAddPlaylist(final int position) {
         final Dialog dialog = new Dialog(context);

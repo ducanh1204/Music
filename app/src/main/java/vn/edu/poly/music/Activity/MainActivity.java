@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static Animation animation;
     public static int load = 0;
-    public static ImageView imgCD, imgPrev, imgPlay, imgNext;
+    public static ImageView imgCD, imgPrev, imgPlay, imgNext, imgRandom, imgRepeat;
     public static TextView tvTenbaiHat, tvThoigian1, tvThoiGian2;
     public static SeekBar seekBar;
     public static int i;
@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
     public static String tenCasi;
     public static String tenThuMuc;
     private PlaylistDAO playlistDAO;
+    public static int checkRandom = 0;
+    public static int checkRepeat = 0;
 
 
     @Override
@@ -90,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
         imgPlay = findViewById(R.id.imgPlay);
         imgNext = findViewById(R.id.imgNext);
         tvTenbaiHat = findViewById(R.id.tvtenBaiHat);
+        imgRandom = findViewById(R.id.imgRandom);
+        imgRepeat = findViewById(R.id.imgRepeat);
         animation = AnimationUtils.loadAnimation(this, R.anim.disc_rotate);
 
         seekBar = findViewById(R.id.SeekBar);
@@ -99,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         playlistDAO = new PlaylistDAO(this);
         songDAO = new SongDAO(this);
         thuMucDAO = new ThuMucDAO(this);
-
 
 
         fragment = new Song_Fragment(this, songList1);
@@ -164,6 +167,41 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        imgRandom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkRandom == 0) {
+                    imgRandom.setImageResource(R.drawable.random_on);
+                    checkRandom = 1;
+                    if (checkRepeat == 1) {
+                        checkRepeat = 0;
+                        imgRepeat.setImageResource(R.drawable.repeate);
+                    }
+                } else {
+                    checkRandom = 0;
+                    imgRandom.setImageResource(R.drawable.random_off);
+                }
+            }
+        });
+        imgRepeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkRepeat == 0) {
+                    imgRepeat.setImageResource(R.drawable.repeat_one);
+                    checkRepeat = 1;
+                    if (checkRandom == 1) {
+                        checkRandom = 0;
+                        imgRandom.setImageResource(R.drawable.random_off);
+                    }
+                } else {
+                    checkRepeat = 0;
+                    imgRepeat.setImageResource(R.drawable.repeate);
+                }
+            }
+        });
+
+
     }
 
 
@@ -231,24 +269,46 @@ public class MainActivity extends AppCompatActivity {
         if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
             Toast.makeText(MainActivity.this, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
         } else {
-            i++;
             if (load == 1) {
                 mediaPlayer.stop();
             }
-            if (list == 1) {
-                songList1 = songDAO.getAll();
-                if (i > songList1.size() - 1) {
-                    i = 0;
+            if (checkRandom == 0 && checkRepeat == 0) {
+                i++;
+                if (list == 1) {
+                    songList1 = songDAO.getAll();
+                    if (i > songList1.size() - 1) {
+                        i = 0;
+                    }
+                } else if (list == 2) {
+                    playlistList = playlistDAO.getAll(tenThuMuc);
+                    if (i > playlistList.size() - 1) {
+                        i = 0;
+                    }
+                } else if (list == 3) {
+                    songList2 = songDAO.getAll_Singer_Song(tenCasi);
+                    if (i > songList2.size() - 1) {
+                        i = 0;
+                    }
                 }
-            } else if (list == 2) {
-                playlistList = playlistDAO.getAll(tenThuMuc);
-                if (i > playlistList.size() - 1) {
-                    i = 0;
+            } else if (checkRandom == 1) {
+                if (list == 1) {
+                    songList1 = songDAO.getAll();
+                    i = startRandom(0, songList1.size() - 1);
+                } else if (list == 2) {
+                    playlistList = playlistDAO.getAll(tenThuMuc);
+                    i = startRandom(0, playlistList.size() - 1);
+                } else if (list == 3) {
+                    songList2 = songDAO.getAll_Singer_Song(tenCasi);
+                    i = startRandom(0, songList2.size() - 1);
                 }
-            } else if (list == 3) {
-                songList2 = songDAO.getAll_Singer_Song(tenCasi);
-                if (i > songList2.size() - 1) {
-                    i = 0;
+            } else if (checkRepeat == 1) {
+                if (list == 1) {
+                    songList1 = songDAO.getAll();
+                } else if (list == 2) {
+                    playlistList = playlistDAO.getAll(tenThuMuc);
+
+                } else if (list == 3) {
+                    songList2 = songDAO.getAll_Singer_Song(tenCasi);
                 }
             }
             startSong(i);
@@ -316,6 +376,10 @@ public class MainActivity extends AppCompatActivity {
         }, 100);
     }
 
+    private int startRandom(int min, int max) {
+        int j = (int) (Math.random() * (max - min + 1) + min);
+        return j;
+    }
 
     // Create menu
     @Override

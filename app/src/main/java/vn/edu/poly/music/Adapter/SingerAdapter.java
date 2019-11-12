@@ -28,6 +28,7 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHold
     private SongDAO songDAO;
     private RecyclerView rvListSinger_Song;
 
+    private Dialog dialog;
     public SingerAdapter(Context context, List<Singer> singerList,List<Song> songList) {
         this.context = context;
         this.singerList = singerList;
@@ -49,14 +50,14 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHold
             @Override
             public void onClick(View v) {
                 ImageView imgClose;
-                final Dialog dialog = new Dialog(context);
+                dialog = new Dialog(context);
                 dialog.setContentView(R.layout.dialog_singer_song_acticity);
                 dialog.show();
                 dialog.setTitle("Bài hát của ca sĩ " + singerList.get(position).getTenCaSi());
                 rvListSinger_Song = dialog.findViewById(R.id.rvListSinger_Song);
                 songList = songDAO.getAll_Singer_Song(singerList.get(position).getTenCaSi());
                 MainActivity.tenCasi = singerList.get(position).getTenCaSi();
-                singer_songAdapter = new Singer_SongAdapter(context, songList);
+                singer_songAdapter = new Singer_SongAdapter(context, songList,dialog);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
                 rvListSinger_Song.setLayoutManager(linearLayoutManager);
                 rvListSinger_Song.setAdapter(singer_songAdapter);

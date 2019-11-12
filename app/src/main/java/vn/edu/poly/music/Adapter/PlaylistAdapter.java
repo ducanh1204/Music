@@ -1,6 +1,7 @@
 package vn.edu.poly.music.Adapter;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.media.AudioManager;
@@ -27,11 +28,15 @@ import vn.edu.poly.music.R;
 import vn.edu.poly.music.SQLite.PlaylistDAO;
 
 import static vn.edu.poly.music.Activity.MainActivity.animation;
+import static vn.edu.poly.music.Activity.MainActivity.checkRandom;
+import static vn.edu.poly.music.Activity.MainActivity.checkRepeat;
 import static vn.edu.poly.music.Activity.MainActivity.i;
 import static vn.edu.poly.music.Activity.MainActivity.imgCD;
 import static vn.edu.poly.music.Activity.MainActivity.imgNext;
 import static vn.edu.poly.music.Activity.MainActivity.imgPlay;
 import static vn.edu.poly.music.Activity.MainActivity.imgPrev;
+import static vn.edu.poly.music.Activity.MainActivity.imgRandom;
+import static vn.edu.poly.music.Activity.MainActivity.imgRepeat;
 import static vn.edu.poly.music.Activity.MainActivity.list;
 import static vn.edu.poly.music.Activity.MainActivity.load;
 import static vn.edu.poly.music.Activity.MainActivity.mediaPlayer;
@@ -45,17 +50,19 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PLayli
     private List<Playlist> playlistList;
     private PlaylistDAO playlistDAO;
 
+    private Dialog dialog;
 //    private static int i;
 
-    public PlaylistAdapter(Context context, List<Playlist> playlistList) {
+    public PlaylistAdapter(Context context, List<Playlist> playlistList,Dialog dialog) {
         this.context = context;
         this.playlistList = playlistList;
+        this.dialog=dialog;
     }
 
     @NonNull
     @Override
     public PLaylistHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_playlist,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_playlist, parent, false);
         return new PLaylistHolder(view);
     }
 
@@ -90,76 +97,28 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PLayli
             @Override
             public void onClick(View v) {
                 i = position;
-                list=2;
+                list = 2;
+                checkRepeat = 0;
+                checkRandom = 0;
+                imgRandom.setImageResource(R.drawable.random_off);
+                imgRepeat.setImageResource(R.drawable.repeate);
                 if (load == 0) {
                     startSong(i);
                 } else {
                     mediaPlayer.stop();
                     startSong(i);
                 }
+                dialog.dismiss();
             }
         });
 
-
-//        imgPlay.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                checkPlay();
-//
-//            }
-//        });
-//        imgNext.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                nextSong();
-//            }
-//        });
-//        imgPrev.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                prevSong();
-//            }
-//        });
-//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//                if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
-//                    Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    mediaPlayer.seekTo(seekBar.getProgress());
-//                }
-//            }
-//        });
     }
 
-//    private void checkPlay() {
-//        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
-//            Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
-//        } else {
-//            if (mediaPlayer.isPlaying() == true) {
-//                mediaPlayer.pause();
-//                imgPlay.setImageResource(R.drawable.play);
-//                load = 0;
-//                imgCD.clearAnimation();
-//            } else {
-//                imgCD.startAnimation(animation);
-//                mediaPlayer.start();
-//                imgPlay.setImageResource(R.drawable.pause);
-//                load = 1;
-//            }
-//
-//            setTimeTotal();
-//            updateTimeSong();
-//        }
-//    }
+    private int startRandom(int min, int max) {
+        int j = (int) (Math.random() * (max - min + 1) + min);
+        return j;
+    }
+
 
     private void startSong(int position) {
         mediaPlayer = new MediaPlayer();
@@ -186,42 +145,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PLayli
         updateTimeSong();
     }
 
-//    private void nextSong() {
-//        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
-//            Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
-//        } else {
-//            i++;
-//            if (load == 1) {
-//                mediaPlayer.stop();
-//            }
-//            if (i > playlistList.size() - 1) {
-//                i = 0;
-//            }
-//            startSong(i);
-//            imgCD.startAnimation(animation);
-//            setTimeTotal();
-//            updateTimeSong();
-//        }
-//    }
-//
-//    private void prevSong() {
-//        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
-//            Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
-//        } else {
-//            i--;
-//            if (load == 1) {
-//                mediaPlayer.stop();
-//            }
-//            if (i < 0) {
-//                i = playlistList.size() - 1;
-//            }
-//            startSong(i);
-//            imgCD.startAnimation(animation);
-//            setTimeTotal();
-//            updateTimeSong();
-//        }
-//    }
-
     private void setTimeTotal() {
         SimpleDateFormat dinhDangGio = new SimpleDateFormat("mm:ss");
         tvThoiGian2.setText(dinhDangGio.format(mediaPlayer.getDuration()));
@@ -241,12 +164,17 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PLayli
                         if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
                             Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
                         } else {
-                            i++;
                             if (load == 1) {
                                 mediaPlayer.stop();
                             }
-                            if (i > playlistList.size() - 1) {
-                                i = 0;
+                            if (checkRepeat == 0 && checkRandom == 0) {
+                                i++;
+
+                                if (i > playlistList.size() - 1) {
+                                    i = 0;
+                                }
+                            } else if (checkRandom == 1) {
+                                i = startRandom(0, playlistList.size() - 1);
                             }
                             startSong(i);
                             imgCD.startAnimation(animation);
@@ -263,19 +191,15 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PLayli
     }
 
 
-
-
-
-
-
     @Override
     public int getItemCount() {
         return playlistList.size();
     }
 
     public class PLaylistHolder extends RecyclerView.ViewHolder {
-        private TextView tvtenBaiHat,tvtenCaSi;
+        private TextView tvtenBaiHat, tvtenCaSi;
         private ImageView imgDelete_Song;
+
         public PLaylistHolder(@NonNull View itemView) {
             super(itemView);
             tvtenBaiHat = itemView.findViewById(R.id.tvtenBaiHat);

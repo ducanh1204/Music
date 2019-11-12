@@ -21,16 +21,16 @@
         android:layout_above="@+id/ll"
         android:layout_marginBottom="4dp"
         android:background="@color/backgroudd"
-        android:paddingTop="10dp"
         android:orientation="horizontal"
+        android:paddingTop="10dp"
         android:paddingBottom="10dp">
 
         <ImageView
-            android:layout_marginLeft="10dp"
-            android:layout_gravity="center_vertical"
             android:id="@+id/imgCD"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/cd_music_icon" />
 
 
@@ -39,80 +39,101 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_centerHorizontal="true"
                 android:id="@+id/llinfor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
                 android:layout_marginLeft="16dp"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/tvtenBaiHat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chưa chọn bài hát"/>
+                    android:text="Chưa chọn bài hát" />
             </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/rll"
-                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/llinfor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <TextView
-                android:textSize="10sp"
-                android:id="@+id/tvthoigian1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/SeekBar"
-                android:text="00:00" />
+                android:layout_marginTop="10dp">
 
-            <TextView
-                android:textSize="10sp"
-                android:id="@+id/tvthoigian2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/SeekBar"
-                android:text="00:00" />
+                <TextView
+                    android:id="@+id/tvthoigian1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/SeekBar"
+                    android:text="00:00"
+                    android:textSize="10sp" />
 
-            <SeekBar
-                android:layout_below="@+id/tvthoigian1"
-                android:id="@+id/SeekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                <TextView
+                    android:id="@+id/tvthoigian2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/SeekBar"
+                    android:text="00:00"
+                    android:textSize="10sp" />
+
+                <SeekBar
+                    android:id="@+id/SeekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvthoigian1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp" />
             </RelativeLayout>
 
 
             <RelativeLayout
-                android:layout_marginTop="10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/rll"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rll"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/imgRandom"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/random_off" />
 
                 <ImageView
                     android:id="@+id/imgPrev"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/prev_icon"/>
+                    android:layout_alignBottom="@+id/imgRandom"
+                    android:layout_marginLeft="40dp"
+                    android:layout_toRightOf="@+id/imgRandom"
+                    android:src="@drawable/prev_icon" />
 
                 <ImageView
-                    android:layout_marginLeft="40dp"
-                    android:layout_toRightOf="@+id/imgPrev"
                     android:id="@+id/imgPlay"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_alignBottom="@+id/imgRandom"
+                    android:layout_marginLeft="40dp"
+                    android:layout_toRightOf="@+id/imgPrev"
                     android:src="@drawable/play" />
 
                 <ImageView
-                    android:layout_marginLeft="40dp"
-                    android:layout_toRightOf="@id/imgPlay"
                     android:id="@+id/imgNext"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
+                    android:layout_alignBottom="@+id/imgRandom"
+                    android:layout_marginLeft="40dp"
+                    android:layout_toRightOf="@id/imgPlay"
                     android:src="@drawable/next_icon" />
+
+                <ImageView
+                    android:id="@+id/imgRepeat"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_toRightOf="@+id/imgNext"
+                    android:src="@drawable/repeate" />
             </RelativeLayout>
 
         </RelativeLayout>
