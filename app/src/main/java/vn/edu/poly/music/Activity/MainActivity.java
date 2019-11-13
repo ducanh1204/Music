@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     public static int checkRandom = 0;
     public static int checkRepeat = 0;
 
+    private long backPressedTime;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -521,5 +523,15 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressedTime + 1 > System.currentTimeMillis()) {
+
+            super.onBackPressed();
+            return;
+        }
+        backPressedTime=System.currentTimeMillis();
     }
 }
