@@ -3,7 +3,6 @@
     <item
         android:id="@+id/itemThemDSPhat"
         android:title="@string/titleThemvaods"/>
-        android:title="@string/title_Sua" />
     <item
         android:id="@+id/itemXoa"
         android:title="@string/title_Xoa" />

@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Music</string>
-    <string name="title_Song">Song</string>
-    <string name="title_Playlist">Playlists</string>
-    <string name="title_Singer">Singer</string>
+    <string name="title_Song">Bài hát</string>
+    <string name="title_Album">Album</string>
+    <string name="title_Singer">Ca sĩ</string>
     <string name="title_Xoa">Xóa bài hát</string>
     <string name="title_AddSong">Thêm bài hát</string>
-    <string name="title_AddPlaylist">Thêm danh sách phát</string>
-    <string name="titleThemvaods">Thêm vào danh sách phát</string>
+    <string name="title_AddPlaylist">Thêm album</string>
+    <string name="titleThemvaods">Thêm vào album</string>
     <string name="hint_addSong">Tên bài hát</string>
     <string name="hint_addSinger">Tên ca sĩ</string>
     <string name="hint_addURL">Đường dẫn (chính xác)</string>
@@ -15,4 +15,5 @@
     <string name="title_Update">Sửa</string>
     <string name="hint_addPlaylist">Tên danh sách phát</string>
     <string name="title_ChooseFile">Chọn file bài hát</string>
+    <string name="title_favourite">Yêu thích</string>
 </resources>

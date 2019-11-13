@@ -37,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import vn.edu.poly.music.Adapter.SongAdapter;
+import vn.edu.poly.music.Fragment.SongFavourite_Fragment;
 import vn.edu.poly.music.Fragment.ThuMuc_Fragment;
 import vn.edu.poly.music.Model.Playlist;
 import vn.edu.poly.music.Model.Song;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Song> songList1;
     private List<Song> songList2;
+    private List<Song> songList3;
     private List<Playlist> playlistList;
     private ThuMucDAO thuMucDAO;
 
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         imgRandom = findViewById(R.id.imgRandom);
         imgRepeat = findViewById(R.id.imgRepeat);
         animation = AnimationUtils.loadAnimation(this, R.anim.disc_rotate);
+        setTitle("Bài hát");
 
         seekBar = findViewById(R.id.SeekBar);
         tvThoigian1 = findViewById(R.id.tvthoigian1);
@@ -118,14 +121,22 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.item_song:
                         fragment = new Song_Fragment(MainActivity.this, songList1);
                         loadFragment(fragment);
+                        setTitle("Bài hát");
                         return true;
-                    case R.id.item_playlist:
+                    case R.id.item_album:
                         fragment = new ThuMuc_Fragment(MainActivity.this, playlistList);
                         loadFragment(fragment);
+                        setTitle("Album");
                         return true;
                     case R.id.item_singer:
                         fragment = new Singer_Fragment(MainActivity.this, songList2);
                         loadFragment(fragment);
+                        setTitle("Ca sĩ");
+                        return true;
+                    case R.id.item_favourite:
+                        fragment = new SongFavourite_Fragment(MainActivity.this, songList3);
+                        loadFragment(fragment);
+                        setTitle("Yêu thích");
                         return true;
                 }
                 return false;
@@ -242,6 +253,10 @@ public class MainActivity extends AppCompatActivity {
             Uri uri = Uri.parse(songList2.get(position).getFileMp3());
             tvTenbaiHat.setText(songList2.get(position).getTenBaiHat() + " - " + songList2.get(position).getTenCaSi());
             check(uri);
+        } else if (list==4){
+            Uri uri = Uri.parse(songList3.get(position).getFileMp3());
+            tvTenbaiHat.setText(songList3.get(position).getTenBaiHat() + " - " + songList3.get(position).getTenCaSi());
+            check(uri);
         }
         setTimeTotal();
         updateTimeSong();
@@ -290,6 +305,11 @@ public class MainActivity extends AppCompatActivity {
                     if (i > songList2.size() - 1) {
                         i = 0;
                     }
+                } else if (list == 4) {
+                    songList3 = songDAO.getAll_Song_favourite("1");
+                    if (i > songList3.size() - 1) {
+                        i = 0;
+                    }
                 }
             } else if (checkRandom == 1) {
                 if (list == 1) {
@@ -301,6 +321,9 @@ public class MainActivity extends AppCompatActivity {
                 } else if (list == 3) {
                     songList2 = songDAO.getAll_Singer_Song(tenCasi);
                     i = startRandom(0, songList2.size() - 1);
+                } else if (list==4){
+                    songList3 = songDAO.getAll_Song_favourite("1");
+                    i = startRandom(0, songList3.size() - 1);
                 }
             } else if (checkRepeat == 1) {
                 if (list == 1) {
@@ -310,6 +333,8 @@ public class MainActivity extends AppCompatActivity {
 
                 } else if (list == 3) {
                     songList2 = songDAO.getAll_Singer_Song(tenCasi);
+                } else if (list==4){
+                    songList3 = songDAO.getAll_Song_favourite("1");
                 }
             }
             startSong(i);
@@ -449,6 +474,7 @@ public class MainActivity extends AppCompatActivity {
                     song.setTenBaiHat(edtAddSong.getText().toString().trim());
                     song.setTenCaSi(edtAddSinger.getText().toString().trim());
                     song.setFileMp3(mediaPath);
+                    song.setYeuThich(0);
                     long result = songDAO.insert(song);
                     if (result > 0) {
                         Toast.makeText(MainActivity.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
@@ -530,6 +556,6 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
             return;
         }
-        backPressedTime=System.currentTimeMillis();
+        backPressedTime = System.currentTimeMillis();
     }
 }

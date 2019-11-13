@@ -4,6 +4,7 @@ public class Song {
 
     private String tenBaiHat,tenCaSi;
     private String fileMp3;
+    private int yeuThich;
 
     public String getTenBaiHat() {
         return tenBaiHat;
@@ -27,5 +28,13 @@ public class Song {
 
     public void setFileMp3(String fileMp3) {
         this.fileMp3 = fileMp3;
+    }
+
+    public int getYeuThich() {
+        return yeuThich;
+    }
+
+    public void setYeuThich(int yeuThich) {
+        this.yeuThich = yeuThich;
     }
 }

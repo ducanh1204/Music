@@ -85,7 +85,7 @@ public class ThuMucAdapter extends RecyclerView.Adapter<ThuMucAdapter.ThuMUctHol
                 dialog.show();
 
                 rvListPlaylist = dialog.findViewById(R.id.rvListPlaylist);
-                dialog.setTitle("Danh sách phát " + thuMucList.get(position).getTenThuMuc());
+                dialog.setTitle("Album " + thuMucList.get(position).getTenThuMuc());
                 playlistList = playlistDAO.getAll(thuMucList.get(position).getTenThuMuc());
                 MainActivity.tenThuMuc=thuMucList.get(position).getTenThuMuc();
                 playlistAdapter = new PlaylistAdapter(context, playlistList,dialog);

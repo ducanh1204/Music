@@ -6,11 +6,15 @@
         android:icon="@drawable/music_icon"
         android:title="@string/title_Song" />
     <item
-        android:id="@+id/item_playlist"
-        android:icon="@drawable/playlist_icon"
-        android:title="@string/title_Playlist" />
+        android:id="@+id/item_album"
+        android:icon="@drawable/album"
+        android:title="@string/title_Album" />
     <item
         android:id="@+id/item_singer"
         android:icon="@drawable/casi_icon"
         android:title="@string/title_Singer" />
+    <item
+        android:id="@+id/item_favourite"
+        android:icon="@drawable/favorite"
+        android:title="@string/title_favourite" />
 </menu>

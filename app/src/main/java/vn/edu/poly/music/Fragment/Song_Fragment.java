@@ -61,7 +61,6 @@ public class Song_Fragment extends Fragment {
         rvListSong.setLayoutManager(linearLayoutManager);
         rvListSong.setAdapter(songAdapter);
 
-
         return view;
     }
 

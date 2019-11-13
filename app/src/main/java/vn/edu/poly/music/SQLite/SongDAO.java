@@ -23,6 +23,7 @@ public class SongDAO {
     public String tenBaiHat = "tenBaiHat";
     public String tenCaSi = "tenCaSi";
     public String fileMp3 = "fileMp3";
+    public String yeuThich = "yeuThich";
 
     public List<Song> getAll() {
         List<Song> songList = new ArrayList<>();
@@ -44,6 +45,7 @@ public class SongDAO {
                     song.setTenBaiHat(cursor.getString(cursor.getColumnIndex(tenBaiHat)));
                     song.setTenCaSi(cursor.getString(cursor.getColumnIndex(tenCaSi)));
                     song.setFileMp3(cursor.getString(cursor.getColumnIndex(fileMp3)));
+                    song.setYeuThich(Integer.parseInt(cursor.getString(cursor.getColumnIndex(yeuThich))));
 
                     songList.add(song);
                     cursor.moveToNext();
@@ -116,6 +118,39 @@ public class SongDAO {
         return songList;
     }
 
+    public List<Song> getAll_Song_favourite(String yeuThichh) {
+        List<Song> songList = new ArrayList<>();
+
+        SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getReadableDatabase();
+
+        String SQL = "SELECT * FROM " + USER_TABLE + " WHERE yeuThich =?";
+
+        Cursor cursor = sqLiteDatabase.rawQuery(SQL,new String[]{yeuThichh});
+
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+
+                    Song song = new Song();
+
+                    song.setTenBaiHat(cursor.getString(cursor.getColumnIndex(tenBaiHat)));
+                    song.setTenCaSi(cursor.getString(cursor.getColumnIndex(tenCaSi)));
+                    song.setFileMp3(cursor.getString(cursor.getColumnIndex(fileMp3)));
+                    song.setYeuThich(Integer.parseInt(cursor.getString(cursor.getColumnIndex(yeuThich))));
+
+                    songList.add(song);
+                    cursor.moveToNext();
+
+                }
+                cursor.close();
+            }
+        }
+
+        return songList;
+    }
+
 
     public long insert(Song song) {
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
@@ -124,6 +159,7 @@ public class SongDAO {
         contentValues.put(tenBaiHat, song.getTenBaiHat());
         contentValues.put(tenCaSi, song.getTenCaSi());
         contentValues.put(fileMp3, song.getFileMp3());
+        contentValues.put(yeuThich,song.getYeuThich());
 
         long result = sqLiteDatabase.insert(USER_TABLE, null, contentValues);
         sqLiteDatabase.close();
@@ -134,9 +170,10 @@ public class SongDAO {
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(tenBaiHat, song.getTenCaSi());
+        contentValues.put(tenBaiHat, song.getTenBaiHat());
         contentValues.put(tenCaSi, song.getTenCaSi());
         contentValues.put(fileMp3, song.getFileMp3());
+        contentValues.put(yeuThich,song.getYeuThich());
 
         long result = sqLiteDatabase.update(USER_TABLE, contentValues, tenBaiHat + "=?", new String[]{song.getTenBaiHat()});
         sqLiteDatabase.close();
@@ -147,6 +184,5 @@ public class SongDAO {
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
 
         sqLiteDatabase.delete(USER_TABLE, tenBaiHat + "=?", new String[]{id});
-
     }
 }

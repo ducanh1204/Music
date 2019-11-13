@@ -11,7 +11,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <ImageView
@@ -29,6 +29,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
+            android:layout_toLeftOf="@+id/imgDelete_Song"
             android:layout_toRightOf="@+id/imgLogo"
             android:orientation="vertical">
 
@@ -41,27 +42,19 @@
             <TextView
                 android:id="@+id/tvtenCaSi"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
-        <ImageView
-            android:id="@+id/imgYeuthich"
-            android:layout_marginRight="20dp"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/traitimof"
-            android:layout_alignBottom="@+id/imgPopupMenu"
-            android:layout_toLeftOf="@+id/imgPopupMenu"/>
 
         <ImageView
-            android:id="@+id/imgPopupMenu"
-            android:layout_width="10dp"
+            android:id="@+id/imgYeuthich"
+            android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="16dp"
-            android:src="@drawable/popupmenu"/>
+            android:src="@drawable/traitimon" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

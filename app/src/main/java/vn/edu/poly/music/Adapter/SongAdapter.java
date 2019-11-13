@@ -84,7 +84,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SongHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final SongHolder holder, final int position) {
         songDAO = new SongDAO(context);
         holder.tvtenBaiHat.setText(songList.get(position).getTenBaiHat());
         holder.tvtenCaSi.setText(songList.get(position).getTenCaSi());
@@ -110,6 +110,43 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                 popupMenu.show();
             }
         });
+        if (songList.get(position).getYeuThich() == 1) {
+            holder.imgYeuthich.setImageResource(R.drawable.traitimon);
+            holder.imgYeuthich.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Song song = new Song();
+                    song.setTenBaiHat(songList.get(position).getTenBaiHat());
+                    song.setTenCaSi(songList.get(position).getTenCaSi());
+                    song.setFileMp3(songList.get(position).getFileMp3());
+                    song.setYeuThich(0);
+                    long result = songDAO.update(song);
+                    if (result > 0) {
+                        Toast.makeText(context, "Đã xóa khỏi danh sách yêu thích", Toast.LENGTH_SHORT).show();
+                        songList = songDAO.getAll();
+                        rvListSong.setAdapter(SongAdapter.this);
+                    }
+                }
+            });
+        } else {
+            holder.imgYeuthich.setImageResource(R.drawable.traitimof);
+            holder.imgYeuthich.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Song song = new Song();
+                    song.setTenBaiHat(songList.get(position).getTenBaiHat());
+                    song.setTenCaSi(songList.get(position).getTenCaSi());
+                    song.setFileMp3(songList.get(position).getFileMp3());
+                    song.setYeuThich(1);
+                    long result = songDAO.update(song);
+                    if (result > 0) {
+                        Toast.makeText(context, "Đã thêm vào danh sách yêu thích", Toast.LENGTH_SHORT).show();
+                        songList = songDAO.getAll();
+                        rvListSong.setAdapter(SongAdapter.this);
+                    }
+                }
+            });
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,67 +165,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                 }
             }
         });
-
-
-//        imgPlay.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                checkPlay();
-//
-//            }
-//        });
-//        imgNext.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                nextSong();
-//            }
-//        });
-//        imgPrev.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                prevSong();
-//            }
-//        });
-//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//                if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
-//                    Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    mediaPlayer.seekTo(seekBar.getProgress());
-//                }
-//            }
-//        });
     }
-
-//    private void checkPlay() {
-//        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
-//            Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
-//        } else {
-//            if (mediaPlayer.isPlaying() == true) {
-//                mediaPlayer.pause();
-//                imgPlay.setImageResource(R.drawable.play);
-//                load = 0;
-//                imgCD.clearAnimation();
-//            } else {
-//                imgCD.startAnimation(animation);
-//                mediaPlayer.start();
-//                imgPlay.setImageResource(R.drawable.pause);
-//                load = 1;
-//            }
-//
-//            setTimeTotal();
-//            updateTimeSong();
-//        }
-//    }
 
     private void startSong(int position) {
         mediaPlayer = new MediaPlayer();
@@ -215,41 +192,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         updateTimeSong();
     }
 
-//    private void nextSong() {
-//        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
-//            Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
-//        } else {
-//            i++;
-//            if (load == 1) {
-//                mediaPlayer.stop();
-//            }
-//            if (i > songList.size() - 1) {
-//                i = 0;
-//            }
-//            startSong(i);
-//            imgCD.startAnimation(animation);
-//            setTimeTotal();
-//            updateTimeSong();
-//        }
-//    }
-//
-//    private void prevSong() {
-//        if (tvTenbaiHat.getText().toString().equals("Chưa chọn bài hát")) {
-//            Toast.makeText(context, "Chưa chọn bài hát", Toast.LENGTH_SHORT).show();
-//        } else {
-//            i--;
-//            if (load == 1) {
-//                mediaPlayer.stop();
-//            }
-//            if (i < 0) {
-//                i = songList.size() - 1;
-//            }
-//            startSong(i);
-//            imgCD.startAnimation(animation);
-//            setTimeTotal();
-//            updateTimeSong();
-//        }
-//    }
 
     private void setTimeTotal() {
         SimpleDateFormat dinhDangGio = new SimpleDateFormat("mm:ss");
@@ -280,7 +222,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                                     i = 0;
                                 }
                             } else if (checkRandom == 1) {
-                                i = startRandom(0, songList.size()-1);
+                                i = startRandom(0, songList.size() - 1);
                             }
                             startSong(i);
                             imgCD.startAnimation(animation);
@@ -295,6 +237,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         }, 100);
     }
 
+
     private int startRandom(int min, int max) {
         int j = (int) (Math.random() * (max - min + 1) + min);
         return j;
@@ -303,7 +246,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     private void createAddPlaylist(final int position) {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_dsthumuc);
-        dialog.setTitle("Chọn danh sách phát");
+        dialog.setTitle("Chọn album");
         dialog.show();
         ImageView imgClose;
         imgClose = dialog.findViewById(R.id.imgClose);
@@ -330,9 +273,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                 playlist.setTenThuMuc(thuMucList.get(i).getTenThuMuc());
                 long result = playlistDAO.insert(playlist);
                 if (result > 0) {
-                    Toast.makeText(context, "Thêm thành công vào danh sách phát " + thuMucList.get(i).getTenThuMuc(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Thêm thành công vào album " + thuMucList.get(i).getTenThuMuc(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "Đã được thêm vào danh sách phát " + thuMucList.get(i).getTenThuMuc(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Đã được thêm vào album " + thuMucList.get(i).getTenThuMuc(), Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
             }
@@ -400,13 +343,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
     public class SongHolder extends RecyclerView.ViewHolder {
         private TextView tvtenBaiHat, tvtenCaSi;
-        private ImageView imgPopupmenu;
+        private ImageView imgPopupmenu, imgYeuthich;
 
         public SongHolder(@NonNull View itemView) {
             super(itemView);
             tvtenBaiHat = itemView.findViewById(R.id.tvtenBaiHat);
             tvtenCaSi = itemView.findViewById(R.id.tvtenCaSi);
             imgPopupmenu = itemView.findViewById(R.id.imgPopupMenu);
+            imgYeuthich = itemView.findViewById(R.id.imgYeuthich);
         }
     }
 }
