@@ -12,12 +12,15 @@
         android:roundIcon="@drawable/music"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.MainActivity">
+        <activity android:name=".Activity.ManhinhchaoActivity"
+            android:theme="@style/manhinhchao">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".Activity.MainActivity">
         </activity>
     </application>
 
