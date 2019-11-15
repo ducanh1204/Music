@@ -13,7 +13,7 @@
     <string name="title_Cancel">Hủy</string>
     <string name="title_OK">Thêm</string>
     <string name="title_Update">Sửa</string>
-    <string name="hint_addPlaylist">Tên danh sách phát</string>
+    <string name="hint_addPlaylist">Tên album</string>
     <string name="title_ChooseFile">Chọn file bài hát</string>
     <string name="title_favourite">Yêu thích</string>
 </resources>

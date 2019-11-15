@@ -495,7 +495,7 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.setContentView(R.layout.dialog_add_playlist);
         dialog.show();
-        dialog.setTitle("Thêm bài hát");
+        dialog.setTitle("Thêm album");
         final EditText edtAddPlaylist;
         edtAddPlaylist = dialog.findViewById(R.id.edtAddPlaylist);
         dialog.findViewById(R.id.btnOK).setOnClickListener(new View.OnClickListener() {
